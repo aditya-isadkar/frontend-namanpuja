@@ -6,7 +6,7 @@ import { FlowSelector } from '@/components/FlowSelector';
 import { HowItWorks } from '@/components/HowItWorks';
 import { PujaCard } from '@/components/PujaCard';
 import { Reveal, StaggerGroup, StaggerItem } from '@/components/motion';
-import { PujaSection } from '../components/PujaSection.tsx';
+import { PujaSection } from '@/components/PujaSection';
 
 export const revalidate = 300;
 
