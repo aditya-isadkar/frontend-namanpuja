@@ -39,13 +39,13 @@ export function PujaCard({ puja, href }: { puja: Puja; href?: string }) {
             </span>
           )}
         </div>
-        <Link
-          href={href ?? `/pujas/${puja.slug}`}
+        <span
+          // href={href ?? `/pujas/${puja.slug}`}
           className="flex items-center gap-4 font-semibold text-saffron-500"
         >
           <span>View More</span>
           <ArrowRight className="h-4 w-4 text-saffron-500 transition-transform group-hover:translate-x-1" />
-        </Link>
+        </span>
       </div>
     </Link>
   );
