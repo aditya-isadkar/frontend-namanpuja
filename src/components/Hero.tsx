@@ -111,8 +111,8 @@ export function Hero() {
               )}
             </div>
             <div className="mt-6 flex items-center justify-between rounded-xl bg-ink px-4 py-3 text-white">
-              <span className="text-sm">Starting from</span>
-              <span className="font-display text-lg font-bold">₹5,100</span>
+              <span className="text-sm">Book Your First Puja Today</span>
+             
             </div>
           </div>
         </motion.div>
