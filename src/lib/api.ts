@@ -18,6 +18,7 @@ async function api<T>(path: string, opts: FetchOpts = {}): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
     next: { revalidate: opts.revalidate ?? 300 },
     headers: { Accept: 'application/json' },
+    signal: AbortSignal.timeout(15_000),
   });
   if (!res.ok) {
     throw new Error(`API ${path} failed: ${res.status}`);
