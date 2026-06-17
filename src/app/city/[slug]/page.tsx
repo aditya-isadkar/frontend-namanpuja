@@ -56,11 +56,7 @@ export default async function CityPage({ params }: Props) {
                   <span className="grid h-11 w-11 place-items-center rounded-2xl bg-saffron-gradient text-white">
                     <Flame className="h-5 w-5" />
                   </span>
-                  {loc.puja?.basePrice && (
-                    <span className="font-semibold text-ink">
-                      ₹{Number(loc.puja.basePrice).toLocaleString('en-IN')}
-                    </span>
-                  )}
+                  
                 </div>
                 <h3 className="mt-4 font-display text-lg font-bold">{loc.puja?.name}</h3>
                 {loc.puja?.deity && <p className="mt-1 text-sm text-saffron-700">{loc.puja.deity}</p>}
@@ -80,31 +76,7 @@ export default async function CityPage({ params }: Props) {
         </StaggerGroup>
       </section>
 
-      {temples.length > 0 && (
-        <section className="bg-saffron-radial py-16">
-          <div className="container-page">
-            <h2 className="section-title mb-8">Temples in {city.name}</h2>
-            <StaggerGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {temples.map((t) => (
-                <StaggerItem key={t.id}>
-                  <Link href={`/temples/${t.slug}`} className="card group block h-full">
-                    <div className="flex items-center gap-3">
-                      <span className="grid h-11 w-11 place-items-center rounded-2xl bg-saffron-50 text-saffron-600">
-                        <Landmark className="h-5 w-5" />
-                      </span>
-                      <div>
-                        <h3 className="font-display font-bold leading-tight">{t.name}</h3>
-                        {t.deity && <p className="text-xs text-ink/50">{t.deity}</p>}
-                      </div>
-                    </div>
-                    <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink/60">{t.shortDesc}</p>
-                  </Link>
-                </StaggerItem>
-              ))}
-            </StaggerGroup>
-          </div>
-        </section>
-      )}
+      
     </>
   );
 }

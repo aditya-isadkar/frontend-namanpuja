@@ -116,11 +116,6 @@ export default async function LocationPage({ params }: Props) {
               <Link href={bookHref} className="btn-primary">
                 {loc.cta?.buttonLabel ?? 'Book this Puja'} <Flame className="h-4 w-4" />
               </Link>
-              {loc.puja?.basePrice && (
-                <span className="inline-flex items-center rounded-full border border-saffron-200 bg-white px-6 py-3 font-semibold text-ink">
-                  Starting ₹{Number(loc.puja.basePrice).toLocaleString('en-IN')}
-                </span>
-              )}
             </div>
           </Reveal>
         </div>
@@ -250,12 +245,6 @@ export default async function LocationPage({ params }: Props) {
           <div className="rounded-3xl border border-saffron-100 bg-white p-6 shadow-glow">
             <h3 className="font-display text-xl font-bold">Book {loc.puja?.name}</h3>
             <p className="mt-1 text-sm text-ink/60">in {loc.city?.name}, {loc.city?.state}</p>
-            {loc.puja?.basePrice && (
-              <p className="mt-4 font-display text-3xl font-extrabold text-saffron-600">
-                ₹{Number(loc.puja.basePrice).toLocaleString('en-IN')}
-                <span className="ml-1 text-sm font-normal text-ink/50">onwards</span>
-              </p>
-            )}
             <Link href={bookHref} className="btn-primary mt-5 w-full">
               {loc.cta?.buttonLabel ?? 'Book Now'}
             </Link>

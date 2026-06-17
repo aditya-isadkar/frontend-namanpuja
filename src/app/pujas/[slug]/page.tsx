@@ -52,11 +52,6 @@ export default async function PujaPage({ params }: Props) {
                   <Clock className="h-4 w-4" /> {Math.round(p.durationMin / 60)}h+ ceremony
                 </span>
               )}
-              {p.basePrice && (
-                <span className="font-semibold text-ink">
-                  ₹{Number(p.basePrice).toLocaleString('en-IN')} onwards
-                </span>
-              )}
             </div>
           </Reveal>
         </div>
