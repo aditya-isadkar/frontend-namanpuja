@@ -84,5 +84,14 @@ export async function createBooking(payload: BookingPayload) {
   if (!res.ok) throw new Error(data?.error ?? 'Booking failed');
   return data as { reference: string; status: string; message: string };
 }
+export const getAllCitiesWithCountry = async () => {
+  const countries = await getCountries();
+  const results = await Promise.all(
+    countries.map((c) => getCountryCities(c.slug)),
+  );
+  return results.flatMap((r) =>
+    r.cities.map((city) => ({ ...city, country: r.country })),
+  );
+};
 
 export { API_URL };

@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     default: 'Naman Puja — Book Authentic Vedic Pujas at Home & Online',
     template: '%s | Naman Puja',
   },
+  icons:{ icon: '/images/Namanpuja_Logo.png'},
   description:
     'Book authentic Hindu pujas with experienced Vedic priests — at home or online. Choose your country, your city, and the puja you need. Preserving traditions across generations.',
   keywords: [

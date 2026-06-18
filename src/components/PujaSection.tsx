@@ -59,7 +59,7 @@ export function PujaSection() {
             href="/book"
             className="inline-flex mt-8 items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-7 rounded-full transition-all w-fit shadow-md text-base"
           >
-            Book Divine Shade  <ArrowRight className="h-4 w-4" />
+            Connect with Sacred Services <ArrowRight className="h-4 w-4" />
           </a>
           
                      

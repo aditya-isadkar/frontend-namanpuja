@@ -38,9 +38,11 @@ export function PujaCard({ puja, href }: { puja: Puja; href?: string }) {
               h+
             </span>
           )}
+          {price && (
+            <span className="font-semibold text-ink">₹{price}</span>
+          )}
         </div>
         <span
-          // href={href ?? `/pujas/${puja.slug}`}
           className="flex items-center gap-4 font-semibold text-saffron-500"
         >
           <span>View More</span>

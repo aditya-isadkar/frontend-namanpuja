@@ -5,8 +5,10 @@ import { Hero } from '@/components/Hero';
 import { FlowSelector } from '@/components/FlowSelector';
 import { HowItWorks } from '@/components/HowItWorks';
 import { PujaCard } from '@/components/PujaCard';
+import { SlideImg } from '@/components/SlideImg';
 import { Reveal, StaggerGroup, StaggerItem } from '@/components/motion';
 import { PujaSection } from '../components/PujaSection';
+// import MainPuja  from '@/app/pujas/MainPuja/page'
 
 export const revalidate = 300;
 
@@ -23,22 +25,24 @@ export default async function HomePage() {
   const featuredTemples = temples.slice(0, 6);
 
   return (
-    <>
+    <><SlideImg/>
       <Hero />
+      
       <FlowSelector countries={countries} />
  <PujaSection/>
       {/* Featured pujas */}
-      <section id="pujas" className="container-page py-20 ">
+      <div  style={{ backgroundColor: '#c14004ff' }} className='rounded-3xl '>
+      <section id="pujas" className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-20 ">
         <div className="flex flex-col  items-center justify-between gap-4 sm:flex-row sm:items-end">
           <div className="w-full text-center">
             <span className="badge"><Sparkles className="h-3.5 w-3.5 " /> Popular ceremonies</span>
-            <h2 className="section-title mt-4 text-center w-full block ">Pujas performed with devotion</h2>
-            <p className="mt-3 text-ink/60">
+            <h2 className="section-title mt-4 text-center w-full block text-white">Pujas performed with devotion</h2>
+            <p className="mt-3 text-ink/60 text-white">
               Authentic Vedic rituals for every occasion — at your home or online, performed by
               experienced priests.
             </p>
           </div>
-          <Link href="/book" className="btn-ghost shrink-0">
+          <Link href="/pujas/MainPuja" className="btn-ghost shrink-0">
             View all pujas <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -54,7 +58,7 @@ export default async function HomePage() {
             <p className="text-ink/50">Connect the API to load the puja catalog.</p>
           )}
         </StaggerGroup>
-      </section>
+      </section></div>
 
       <HowItWorks />
 
@@ -110,7 +114,7 @@ export default async function HomePage() {
             href="/book"
             className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 font-semibold text-saffron-700 transition-transform hover:scale-105"
           >
-            Book your Puja <ArrowRight className="h-4 w-4" />
+            Discover Puja Services <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>

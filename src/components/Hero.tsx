@@ -18,8 +18,11 @@ export function Hero() {
         animate={{ y: [0, 24, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
       />
-
-      <div className="container-page relative grid items-center gap-12 py-20 lg:grid-cols-2 lg:py-28">
+<h1 className='font-display pb-12 pt-20 text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-center bg-saffron-gradient bg-clip-text text-transparent'>
+  Bridge the Gap Between You and the Divine
+</h1>
+      <div className="container-page relative grid items-center gap-12 py-10 lg:grid-cols-2 lg:py-14">
+        
         <div>
           <motion.div
             initial={{ opacity: 0, y: 16 }}

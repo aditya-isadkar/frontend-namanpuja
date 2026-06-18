@@ -37,7 +37,8 @@ export function FlowSelector({ countries }: { countries: Country[] }) {
   return (
     <section id="flow" className="container-page -mt-12 pb-8 pt-36">
       <div className="rounded-3xl border border-saffron-100 bg-white p-6 shadow-glow sm:p-10">
-        {/* Steps header */}
+        <h1 className='font-display pt-4 pb-20 text-3xl md:text-4xl lg:text-5xl font-bold mb-2 text-center bg-saffron-gradient bg-clip-text text-transparent'> Ancient traditions, now accessible to devotees around the globe.</h1>
+
         <div className="mb-8 flex items-center gap-4 text-sm font-semibold">
           <Step n={1} label="Choose Country" active={!country} done={!!country} />
           <div className="h-px flex-1 bg-saffron-100" />
@@ -55,8 +56,8 @@ export function FlowSelector({ countries }: { countries: Country[] }) {
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.3 }}
             >
-              <h3 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-                <Globe2 className="h-5 w-5 text-saffron-600" /> Where would you like the puja?
+              <h3 className="mb-4 flex items-center gap-2 font-display text-xl font-bold pt-2 pb-1">
+                <Globe2 className="h-5 w-5 text-saffron-600 " /> Your Country of Accomodation 
               </h3>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                 {countries.map((c) => (
@@ -87,7 +88,7 @@ export function FlowSelector({ countries }: { countries: Country[] }) {
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between pt-2 pb-1">
                 <h3 className="flex items-center gap-2 font-display text-xl font-bold">
                   <MapPin className="h-5 w-5 text-saffron-600" /> Choose your city in {country.name}
                 </h3>
