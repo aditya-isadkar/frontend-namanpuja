@@ -33,15 +33,12 @@ export function Navbar() {
             <a href="/pujas/MainPuja" className=" md:bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-full transition-all shadow-sm text-sm whitespace-nowrap">
               Bless Your Accommodation
             </a>
-            <a href="/MainLocation" className=" md:bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-full transition-all shadow-sm text-sm whitespace-nowrap">
-              Location
-            </a>
-            <button className="hidden  md:inline-flex items-center gap-1.5 text-sm font-bold border border-gray-200 bg-white hover:bg-gray-50 h-9 px-4 rounded-full transition-all md:mr-20">
+            <Link href="/login" className="hidden  md:inline-flex items-center gap-1.5 text-sm font-bold border border-gray-200 bg-white hover:bg-gray-50 h-9 px-4 rounded-full transition-all md:mr-20">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" />
               </svg>
               Login
-            </button>
+            </Link>
           </div>
 
         </nav>
