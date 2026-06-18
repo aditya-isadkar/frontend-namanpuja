@@ -2,7 +2,7 @@
 import Link from 'next/link';
 export function Navbar() {
   return (
-    <header className="border-b border-saffron-100 bg-cream/80 backdrop-blur-md w-full">
+    <header className="border-b border-saffron-100 bg-cream/80 backdrop-blur-md w-full mb-4">
       <div className="container mx-auto px-4">
         <nav className="flex h-16 md:h-20 items-center justify-between">
 
@@ -30,7 +30,7 @@ export function Navbar() {
 
           {/* Right Side — desktop only */}
           <div className="  md:flex items-center gap-3 shrink-0">
-            <a href="/#pujas" className=" md:bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-full transition-all shadow-sm text-sm whitespace-nowrap">
+            <a href="/pujas/MainPuja" className=" md:bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-full transition-all shadow-sm text-sm whitespace-nowrap">
               Bless Your Accommodation
             </a>
             <a href="/MainLocation" className=" md:bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-full transition-all shadow-sm text-sm whitespace-nowrap">

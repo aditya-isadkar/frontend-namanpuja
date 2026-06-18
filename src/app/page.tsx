@@ -25,13 +25,14 @@ export default async function HomePage() {
   const featuredTemples = temples.slice(0, 6);
 
   return (
-    <><SlideImg/>
-      <Hero />
+    <>  <Hero />
+   
+    
       
       <FlowSelector countries={countries} />
  <PujaSection/>
       {/* Featured pujas */}
-      <div  style={{ backgroundColor: '#c14004ff' }} className='rounded-3xl '>
+      <div   className='rounded-3xl bg-gradient-to-r from-orange-500 to-yellow-400 '>
       <section id="pujas" className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-20 ">
         <div className="flex flex-col  items-center justify-between gap-4 sm:flex-row sm:items-end">
           <div className="w-full text-center">

@@ -6,41 +6,52 @@ import { getPuja, getPujas } from '@/lib/api';
 import { Reveal } from '@/components/motion';
 import { PujaCard } from '@/components/PujaCard';
 import { PujaSearch } from '@/components/PujaSearch';
+import { Tangerine } from 'next/font/google';
 
-
-
-
+const tangerine = Tangerine({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-tangerine',
+});
 
 export default async function page() {
 
  const pujas = await getPujas();
 
     return (
-        <section id="pujas">
+        <section id="pujas" className={tangerine.variable}>
             <div className="container-page">
-                <Reveal>
-                    <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Explore Pujas for Every Need</h2>
-                </Reveal>
-                <Reveal className="mt-4 max-w-2xl text-lg text-ink/70">
-                    Browse pujas by category or look for pujas in specific cities.
-                </Reveal>
-                <div className="search_filter">
-                    <div className="both">
-                        <div className="search"> <PujaSearch pujas={pujas} />
-                        </div>
-                        <div className="filter"></div>
-                        <div className="filter"></div>
-                        <div className="filter"></div>
-                    </div>
+                
+                {/* Heading */}
+                <div className="text-center mb-12 mt-20">
+                    <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4 italic">
+                        Sacred Pujas Worldwide
+                    </h1>
+                    <p className="max-w-4xl mx-auto mt-6" style={{
+                        fontFamily: 'var(--font-tangerine)',
+                        fontSize: '75px',
+                        fontWeight: 800,
+                        color: '#e0763f',
+                        lineHeight: 1.2
+                    } as React.CSSProperties}>
+                        Explore sacred pujas, seek blessings, and book authentic Vedic rituals across the world.
+                    </p>
                 </div>
+
+                {/* Search + Filters on same line, centered */}
+                <div className="flex items-center justify-center gap-4 mb-12">
+                    <PujaSearch pujas={pujas} />
+                </div>
+
+                {/* Cards */}
                 <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {pujas.map((p) => (
-            <PujaCard key={p.id || p.slug} puja={p} />
-          ))}
-          {pujas.length === 0 && (
-            <p className="text-ink/50">No pujas found.</p>
-          )}
-        </div>
+                    {pujas.map((p) => (
+                        <PujaCard key={p.id || p.slug} puja={p} />
+                    ))}
+                    {pujas.length === 0 && (
+                        <p className="text-ink/50">No pujas found.</p>
+                    )}
+                </div>
             </div>
         </section>
     )

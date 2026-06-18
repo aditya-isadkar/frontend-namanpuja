@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Globe2, ArrowRight, Loader2 } from 'lucide-react';
 import type { City, Country } from '@/lib/types';
 import { API_URL } from '@/lib/api';
+import { Sparkles, Landmark, } from 'lucide-react';
 
 export function FlowSelector({ countries }: { countries: Country[] }) {
   const router = useRouter();
@@ -36,8 +37,16 @@ export function FlowSelector({ countries }: { countries: Country[] }) {
 
   return (
     <section id="flow" className="container-page -mt-12 pb-8 pt-36">
+       <div className="w-full text-center mb-6 bg-saffron-gradient bg-clip-text text-transparent">
+            <span className="badge"><Landmark className="h-3.5 w-3.5 " /> Popular Locations</span>
+            <h2 className="section-title mt-4 text-center w-full block bg-saffron-gradient bg-clip-text text-transparent ">Pujas performed with devotion</h2>
+            <p className="mt-3 bg-saffron-gradient bg-clip-text text-transparent">
+              Authentic Vedic rituals for every occasion — at your home or online, performed by
+              experienced priests.
+            </p>
+          </div>        
       <div className="rounded-3xl border border-saffron-100 bg-white p-6 shadow-glow sm:p-10">
-        <h1 className='font-display pt-4 pb-20 text-3xl md:text-4xl lg:text-5xl font-bold mb-2 text-center bg-saffron-gradient bg-clip-text text-transparent'> Ancient traditions, now accessible to devotees around the globe.</h1>
+        <h1 className='font-display pt-4 pb-20 text-3xl md:text-4xl lg:text-5xl font-bold mb-2 text-center bg-black bg-clip-text text-transparent'> Ancient traditions, now accessible to devotees around the globe.</h1>
 
         <div className="mb-8 flex items-center gap-4 text-sm font-semibold">
           <Step n={1} label="Choose Country" active={!country} done={!!country} />

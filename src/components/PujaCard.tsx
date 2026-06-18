@@ -38,9 +38,9 @@ export function PujaCard({ puja, href }: { puja: Puja; href?: string }) {
               h+
             </span>
           )}
-          {price && (
+          {/* {price && (
             <span className="font-semibold text-ink">₹{price}</span>
-          )}
+          )} */}
         </div>
         <span
           className="flex items-center gap-4 font-semibold text-saffron-500"
