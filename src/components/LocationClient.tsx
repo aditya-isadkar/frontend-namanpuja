@@ -3,22 +3,29 @@
 import { useState, useMemo } from 'react';
 import { LocationSearch } from './LocationSearch';
 import { CountryCard } from './CountryCard';
+import type { City, Country } from '@/lib/types';
 
-interface City { id?: string; slug: string; name: string; }
-interface Country { id?: string; slug: string; name: string; cities: City[]; }
+interface CountryWithCities extends Country {
+  cities: City[];
+}
 
-export function LocationsClient({ countries }: { countries: Country[] }) {
+export function LocationsClient({ countries }: { countries: CountryWithCities[] }) {
   const [query, setQuery] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
 
-  const countryOptions = useMemo(
-    () => countries.map((c) => c.name),
-    [countries],
-  );
+  const countryOptions = useMemo(() => countries.map((c) => c.name), [countries]);
+
   const cityOptions = useMemo(
-    () => Array.from(new Set(countries.flatMap((c) => c.cities.map((city) => city.name)))),
-    [countries],
+    () =>
+      Array.from(
+        new Set(
+          countries
+            .filter((c) => !selectedCountry || c.name === selectedCountry)
+            .flatMap((c) => c.cities.map((city) => city.name)),
+        ),
+      ),
+    [countries, selectedCountry],
   );
 
   const filtered = useMemo(() => {
@@ -28,13 +35,13 @@ export function LocationsClient({ countries }: { countries: Country[] }) {
       .map((c) => ({
         ...c,
         cities: c.cities.filter((city) => {
-          const matchesQuery = !q || city.name.toLowerCase().includes(q) || c.name.toLowerCase().includes(q);
+          const matchesQuery =
+            !q || city.name.toLowerCase().includes(q) || c.name.toLowerCase().includes(q);
           const matchesCity = !selectedCity || city.name === selectedCity;
           return matchesQuery && matchesCity;
         }),
       }))
-     // hide countries with no matching cities
-  }, [countries, query, selectedCountry, selectedCity]);
+.filter((c) => c.cities.length > 0 || (!q && !selectedCity));  }, [countries, query, selectedCountry, selectedCity]);
 
   return (
     <>
@@ -51,8 +58,8 @@ export function LocationsClient({ countries }: { countries: Country[] }) {
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((country) => (
-  <CountryCard key={country.id || country.slug} country={{ ...country, id: country.id ?? country.slug }} cities={country.cities}/>
-))}
+          <CountryCard key={country.id} country={country} cities={country.cities} />
+        ))}
         {filtered.length === 0 && (
           <p className="text-ink/50">No results match your filters.</p>
         )}
