@@ -187,23 +187,14 @@ export function Navbar() {
       {/* ── Main Navbar ── */}
       <nav className="bg-white border-b border-orange-100">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-8 h-8 bg-[#E8530A] rounded-full flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5 text-white"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
-              </svg>
-            </div>
-            <span className="font-bold text-xl text-gray-900">
-              Naman<span className="text-[#E8530A]">Puja</span>
+        
+         {/* Logo — centered on mobile, left on desktop */}
+          <Link href="/" className="flex flex-col items-center md:items-start mx-auto md: ml-20">
+            <img src="/images/Namanpuja_Logo.png" alt="Namanpuja Logo" className="h-12 md:h-14 w-auto object-contain "/>
+            <span className="text-[7px] md:text-[8px] font-bold text-primary uppercase tracking-[0.05em] whitespace-nowrap opacity-80 text-saffron-800">
+              Seva • Suvidha • Samarpan
             </span>
-          </Link>
-
+          </Link> 
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => {
