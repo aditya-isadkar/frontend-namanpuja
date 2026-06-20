@@ -67,7 +67,7 @@ function NavDropdown({ label, options }: {
 export function Navbar({ countries, cities, pujas }: NavbarProps) {
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent w-full">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent w-full"> 
       <div className="container mx-auto px-4">
         <nav className="flex h-16 md:h-20 items-center justify-between bg-transparent">
 
@@ -122,10 +122,12 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
               </svg>
               Login
             </Link>
-          </div>
 
-        </nav>
-      </div>
-    </header>
+            {/* Book a Puja CTA */}
+            
+          </div></nav>
+          </div>
+        
+   </header>
   );
 }

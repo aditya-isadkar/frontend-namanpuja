@@ -7,6 +7,7 @@ import { Reveal } from '@/components/motion';
 import { PujaCard } from '@/components/PujaCard';
 import { PujaSearch } from '@/components/PujaSearch';
 import { Tangerine } from 'next/font/google';
+import { Suspense } from 'react';
 
 const tangerine = Tangerine({
   subsets: ['latin'],
@@ -41,7 +42,8 @@ export default async function page() {
 
                 {/* Search + Filters on same line, centered */}
                 <div className="flex items-center justify-center gap-4 mb-12">
-                    <PujaSearch pujas={pujas} />
+                    <Suspense fallback={<div>Loading...</div>}><PujaSearch pujas={pujas} /> </Suspense>
+                    
                 </div>
 
                 {/* Cards */}
