@@ -134,7 +134,7 @@ import { SlideImg } from './SlideImg'; // adjust import path as needed
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden min-h-screen">
       {/* Sliding image background */}
       <SlideImg />
 
@@ -154,7 +154,7 @@ export function Hero() {
         Bridge the Gap Between You and the Divine
       </h1> */}
 
-      <div className="container-page relative z-10 grid items-center gap-12 py-10 lg:grid-cols-2 lg:py-14">
+      <div className="container-page relative z-10 grid items-center gap-12 py-10 pt-24 lg:grid-cols-2 lg:pt-32 lg:pb-20">
         <div>
           <motion.div
             initial={{ opacity: 0, y: 16 }}

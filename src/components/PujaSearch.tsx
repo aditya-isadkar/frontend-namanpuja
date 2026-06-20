@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import { PujaCard } from '@/components/PujaCard';
 import type { Puja } from '@/lib/types';
+import { useSearchParams } from 'next/navigation';
 
 const serviceTypeLabel: Record<string, string> = {
   EPUJA: 'Online e-Puja',
@@ -12,11 +13,11 @@ const serviceTypeLabel: Record<string, string> = {
 };
 
 export function PujaSearch({ pujas }: { pujas: Puja[] }) {
-  const [query, setQuery] = useState('');
-  const [deity, setDeity] = useState('');
-  const [serviceType, setServiceType] = useState('');
-  const [category, setCategory] = useState('');
-
+ const searchParams = useSearchParams();
+const [query, setQuery] = useState('');
+const [deity, setDeity] = useState(searchParams.get('deity') ?? '');
+const [serviceType, setServiceType] = useState(searchParams.get('serviceType') ?? '');
+const [category, setCategory] = useState(searchParams.get('category') ?? '');
   const deityOptions = useMemo(
     () => Array.from(new Set(pujas.map((p) => p.deity).filter(Boolean))) as string[],
     [pujas],

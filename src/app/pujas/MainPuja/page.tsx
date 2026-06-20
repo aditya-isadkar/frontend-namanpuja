@@ -17,6 +17,7 @@ const tangerine = Tangerine({
 export default async function page() {
 
  const pujas = await getPujas();
+ 
 
     return (
         <section id="pujas" className={tangerine.variable}>
@@ -44,14 +45,7 @@ export default async function page() {
                 </div>
 
                 {/* Cards */}
-                <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {pujas.map((p) => (
-                        <PujaCard key={p.id || p.slug} puja={p} />
-                    ))}
-                    {pujas.length === 0 && (
-                        <p className="text-ink/50">No pujas found.</p>
-                    )}
-                </div>
+              
             </div>
         </section>
     )

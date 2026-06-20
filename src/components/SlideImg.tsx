@@ -197,7 +197,7 @@ export function SlideImg() {
   }, []);
 
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-0 -z-10  ">
       {slides.map((s, index) => {
         if (!renderedSlides.has(index)) return null;
         return (
