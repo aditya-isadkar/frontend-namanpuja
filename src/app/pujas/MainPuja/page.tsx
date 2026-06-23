@@ -21,11 +21,11 @@ export default async function page() {
  
 
     return (
-        <section id="pujas" className={tangerine.variable}>
-            <div className="container-page">
+        <section id="pujas" className={tangerine.variable}  >
+            <div className="container-pag ">
                 
                 {/* Heading */}
-                <div className="text-center mb-12 mt-20">
+                <div className="text-center mb-12 mt-28">
                     <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4 italic">
                         Sacred Pujas Worldwide
                     </h1>

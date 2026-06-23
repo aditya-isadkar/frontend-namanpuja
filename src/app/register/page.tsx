@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <section className="bg-saffron-radial min-h-screen">
-      <div className="container-page py-16">
+    <section className="bg-saffron-radial min-h-screen ">
+      <div className="container-page py-16 ">
         <div className="mx-auto max-w-md">
           <Reveal>
             <div className="rounded-3xl border border-saffron-100 bg-white p-8 shadow-glow">

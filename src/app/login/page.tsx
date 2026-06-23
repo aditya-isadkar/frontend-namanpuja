@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <section className="bg-saffron-radial min-h-screen">
+    <section className="bg-saffron-radial min-h-screen mt-12">
       <div className="container-page py-16">
         <div className="mx-auto max-w-md">
           <Reveal>

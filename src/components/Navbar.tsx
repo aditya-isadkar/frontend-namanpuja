@@ -13,10 +13,11 @@ interface NavbarProps {
   pujas: Puja[];
 }
 
-function NavDropdown({ label, options }: {
+function NavDropdown({ label, options, disableClick = false }: {
   label: string;
+  disableClick?: boolean;
   options: { label: string; value: string; icon?: string }[]
-}) {
+}){
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -42,18 +43,19 @@ function NavDropdown({ label, options }: {
       {open && (
         <div className="absolute top-8 left-0 z-50 min-w-[220px] rounded-2xl bg-gray-900 py-2 shadow-xl">
           {options.map((opt) => (
-            <button
-              key={opt.label}
-              onClick={() => {
-                if (opt.value.startsWith('http') || opt.value.startsWith('tel:') || opt.value.startsWith('mailto:')) {
-                  window.open(opt.value, '_blank');
-                } else {
-                  router.push(opt.value);
-                }
-                setOpen(false);
-              }}
-              className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3"
-            >
+          <button
+  key={opt.label}
+  disabled={disableClick}                    // add this
+  onClick={() => {
+    if (opt.value.startsWith('http') || opt.value.startsWith('tel:') || opt.value.startsWith('mailto:')) {
+      window.open(opt.value, '_blank');
+    } else {
+      router.push(opt.value);
+    }
+    setOpen(false);
+  }}
+  className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3 disabled:cursor-default disabled:pointer-events-none"  // add disabled: classes
+>
               {opt.icon && <span className="text-base">{opt.icon}</span>}
               {opt.label}
             </button>
@@ -65,10 +67,16 @@ function NavDropdown({ label, options }: {
 }
 
 export function Navbar({ countries, cities, pujas }: NavbarProps) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent w-full"> 
-      <div className="container mx-auto px-4">
+<header className={`fixed top-0 left-0 right-0 z-50 w-full transition-colors duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>      <div className="container mx-auto px-4">
         <nav className="flex h-16 md:h-20 items-center justify-between bg-transparent">
 
           {/* Logo */}
@@ -108,6 +116,7 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
             />
             <NavDropdown
               label="Contact Info"
+                disableClick
               options={[
                 { label: '+91 9311973199', value: 'tel:+919311973199', icon: '📞' },
                 { label: '+91 8796973199', value: 'https://wa.me/918796973199', icon: '💬' },

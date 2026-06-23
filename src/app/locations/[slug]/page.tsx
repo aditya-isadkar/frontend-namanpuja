@@ -94,7 +94,7 @@ export default async function LocationPage({ params }: Props) {
       />
 
       {/* Hero */}
-      <section className="bg-saffron-radial">
+      <section className="bg-saffron-radial mt-12">
         <div className="container-page py-16">
           {loc.breadcrumb && (
             <nav className="mb-5 flex flex-wrap items-center gap-1 text-sm text-ink/50">

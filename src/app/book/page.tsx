@@ -18,7 +18,7 @@ export default async function BookPage({
 }) {
   const pujas = await getPujas();
   return (
-    <section className="bg-saffron-radial">
+    <section className="bg-saffron-radial mt-12">
       <div className="container-page grid gap-12 py-16 lg:grid-cols-[1fr_1.1fr]">
         <Reveal className="lg:sticky lg:top-24 lg:h-fit">
           <span className="badge">Book in minutes</span>
