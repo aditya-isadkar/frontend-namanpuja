@@ -24,3 +24,9 @@ yarn-error.log*
 next-env.d.ts
 .idea/
 .vscode/
+
+#sitemap
+/public/sitemap.xml
+/public/sitemap_temples.xml
+/public/sitemap_cities.xml
+/public/sitemap_index.xml
