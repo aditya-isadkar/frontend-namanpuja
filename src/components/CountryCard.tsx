@@ -20,10 +20,11 @@ export function CountryCard({
   return (
     <div className="rounded-3xl border border-saffron-100 bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between gap-4">
-        <Link
-          href={href ?? `/countries/${country.slug}/cities`}
-          className="group flex items-center gap-3"
-        >
+        <button
+  type="button"
+  onClick={() => setIsOpen((prev) => !prev)}
+  className="group flex items-center gap-3 text-left"
+>
           <span className="grid h-12 w-12 place-items-center rounded-2xl bg-saffron-gradient text-white text-2xl">
             {country.flagEmoji ?? <Globe2 className="h-6 w-6" />}
           </span>
@@ -38,7 +39,7 @@ export function CountryCard({
                 : 'Explore cities'}
             </p>
           </div>
-        </Link>
+        </button>
 
         <div className="flex items-center gap-2">
           {country.isoCode && <span className="badge">{country.isoCode}</span>}
