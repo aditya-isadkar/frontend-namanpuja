@@ -65,15 +65,99 @@ function NavDropdown({ label, options, disableClick = false }: {
     </div>
   );
 }
+function UserMenu({ name, onLogout }: { name: string; onLogout: () => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const initial = name?.trim()?.charAt(0)?.toUpperCase() || '?';
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen((p) => !p)}
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f2e54a] text-sm font-bold text-black hover:bg-yellow-300 transition-all cursor-pointer border-none outline-none focus:outline-none"
+        aria-label="Account menu"
+      >
+        {initial}
+      </button>
+
+      {open && (
+        <div className="absolute top-11 right-0 z-50 min-w-[180px] rounded-2xl bg-gray-900 py-2 shadow-xl">
+          <button
+            onClick={() => {
+              router.push('/account');
+              setOpen(false);
+            }}
+            className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors"
+          >
+            My Account
+          </button>
+          <button
+            onClick={() => {
+              onLogout();
+              setOpen(false);
+            }}
+            className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function Navbar({ countries, cities, pujas }: NavbarProps) {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    function loadUser() {
+      const stored = localStorage.getItem('np_user');
+      if (stored) {
+        try {
+          setUser(JSON.parse(stored));
+        } catch (e) {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    }
+    
+    loadUser();
+    
+    window.addEventListener('auth-change', loadUser);
+    window.addEventListener('storage', loadUser);
+    return () => {
+      window.removeEventListener('auth-change', loadUser);
+      window.removeEventListener('storage', loadUser);
+    };
+  }, []);
+
+  function handleLogout() {
+    localStorage.removeItem('np_user_token');
+    localStorage.removeItem('np_user');
+    setUser(null);
+    window.dispatchEvent(new Event('auth-change'));
+    router.push('/');
+  }
 
   return (
 <header className={`fixed top-0 left-0 right-0 z-50 w-full transition-colors duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>      <div className="container mx-auto px-4">
@@ -125,12 +209,16 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
               ]}
             />
 
-            <Link href="/login" className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#f2e54a] text-black hover:bg-gray-50 h-9 px-4 rounded-full transition-all">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" />
-              </svg>
-              Login
-            </Link>
+           {user ? (
+              <UserMenu name={user.name} onLogout={handleLogout} />
+            ) : (
+              <Link href="/login" className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#f2e54a] text-black hover:bg-gray-50 h-9 px-4 rounded-full transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" />
+                </svg>
+                Login
+              </Link>
+            )}
 
             {/* Book a Puja CTA */}
             

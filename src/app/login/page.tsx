@@ -26,13 +26,7 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              {/* Login Form Component Goes Here */}
-              <div className="rounded-xl border border-dashed border-saffron-200 p-6 text-center text-sm text-ink/50">
-               <LoginForm />
-              </div>
-              
-              
-             
+              <LoginForm />
             </div>
           </Reveal>
         </div>

@@ -26,10 +26,7 @@ export default function RegisterPage() {
                 </p>
               </div>
 
-              {/* Registration Form Component Goes Here */}
-              <div className="rounded-xl border border-dashed border-saffron-200 p-6 text-center text-sm text-ink/50">
-                <RegistrationForm />
-              </div>
+              <RegistrationForm />
             </div>
           </Reveal>
         </div>

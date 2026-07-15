@@ -15,20 +15,21 @@ import namanLogo from "@/assets/naman.webp";
 const Footer = () => {
   const router = useRouter();
   const quickLinks = [
-    { name: "Kedarnath Yatra", href: "/kedarnath-yatra" },
-    { name: "Vrindavan Yatra", href: "/vrindavan-yatra" },
-    { name: "Ayodhya Ram Mandir", href: "/ayodhya-yatra" },
-
-    { name: "Live Darshan", href: "/live-darshan" },
+    { name: "Satyanarayan Puja", href: "/pujas/satyanarayan-puja" },
+    { name: "Griha Pravesh Puja", href: "/pujas/griha-pravesh-puja" },
+    { name: "Ganesh Puja", href: "/pujas/ganesh-puja" },
+    { name: "Lakshmi Puja", href: "/pujas/lakshmi-puja" },
+    { name: "Navagraha Shanti Puja", href: "/pujas/navagraha-shanti-puja" },
+    
   ];
 
   const services: { name: string; href?: string }[] = [
-    { name: "Temple Darshan", href: "/temples" },
-    { name: "Puja Services", href: "/puja" },
-    { name: "Chadhava Seva", href: "/chadhava" },
-    { name: "Prasadam Seva", href: "/prasadam" },
-    { name: "Astro Services", href: "/astro-naman" },
-    { name: "International Temple", },
+    { name: "NamanDarshan", href: "https://namandarshan.com/" },
+    { name: "Puja Services", href: "/pujas/MainPuja" },
+    { name: "NamanKart", href: "https://www.namankart.com/" },
+    { name: "Prasadam Seva", href: "https://www.namandarshan.com/" },
+    { name: "Astro Services", href: "https://namandarshan.com/astro-naman" },
+    { name: "International Temple", href:"https://namandarshan.com/temples"},
   ];
 
   const support = [
@@ -94,7 +95,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div className="lg:pl-12">
-            <h4 className="font-display text-xl font-semibold mb-6">Popular Yatras</h4>
+            <h4 className="font-display text-xl font-semibold mb-6">Popular Pujas</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -111,7 +112,7 @@ const Footer = () => {
 
           {/* Services */}
           <div className="lg:pl-12">
-            <h4 className="font-display text-xl font-semibold mb-6">Our Services</h4>
+            <h4 className="font-display text-xl font-semibold mb-6">Our Other Services</h4>
             <ul className="space-y-3">
               {services.map((link) => (
                 <li key={link.name}>

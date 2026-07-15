@@ -42,7 +42,13 @@ export interface Puja {
   heroImage?: string;
   deity?: string;
   isFeatured?: boolean;
+  sortOrder?: number;
   category?: PujaCategory;
+  benefits?: any;
+  rituals?: any;
+  samagri?: any;
+  occasions?: any;
+  faqs?: any;
 }
 
 export interface NamedDescription {

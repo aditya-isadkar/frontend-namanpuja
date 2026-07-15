@@ -72,6 +72,58 @@ export interface BookingPayload {
   pincode?: string;
   pujaId?: string;
   cityId?: string;
+  userId?: string;
+}
+
+export interface RegisterPayload {
+  email: string;
+  name: string;
+  phone: string;
+  password?: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    phone: string;
+  };
+}
+
+export async function register(payload: RegisterPayload): Promise<AuthResponse> {
+  const res = await fetch(`${API_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || data?.message || 'Registration failed');
+  return data as AuthResponse;
+}
+
+export async function login(payload: { email: string; password?: string }): Promise<AuthResponse> {
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || data?.message || 'Login failed');
+  return data as AuthResponse;
+}
+
+export async function getMe(token: string): Promise<AuthResponse['user']> {
+  const res = await fetch(`${API_URL}/auth/me`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch user');
+  return data as AuthResponse['user'];
 }
 
 export async function createBooking(payload: BookingPayload) {
@@ -81,7 +133,7 @@ export async function createBooking(payload: BookingPayload) {
     body: JSON.stringify(payload),
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data?.error ?? 'Booking failed');
+  if (!res.ok) throw new Error(data?.error ?? data?.message ?? 'Booking failed');
   return data as { reference: string; status: string; message: string };
 }
 export const getAllCitiesWithCountry = async () => {

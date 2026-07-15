@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Loader2, Flame } from 'lucide-react';
 import { createBooking, type BookingPayload } from '@/lib/api';
@@ -17,6 +17,18 @@ export function BookingForm({ pujas, defaultPujaId, defaultCityId }: Props) {
   const [reference, setReference] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [serviceType, setServiceType] = useState<BookingPayload['serviceType']>('HOME_VISIT');
+  const [user, setUser] = useState<{ id: string; name: string; email: string; phone: string } | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('np_user');
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch (err) {
+        // ignore
+      }
+    }
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,6 +47,7 @@ export function BookingForm({ pujas, defaultPujaId, defaultCityId }: Props) {
       pincode: String(form.get('pincode') ?? '') || undefined,
       notes: String(form.get('notes') ?? '') || undefined,
       cityId: defaultCityId,
+      userId: user?.id ?? undefined,
     };
     try {
       const res = await createBooking(payload);
@@ -91,13 +104,13 @@ export function BookingForm({ pujas, defaultPujaId, defaultCityId }: Props) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Your name *">
-          <input name="customerName" required className={inputCls} placeholder="Full name" />
+          <input name="customerName" required className={inputCls} placeholder="Full name" defaultValue={user?.name ?? ''} key={user ? 'u-name' : 'e-name'} />
         </Field>
         <Field label="Phone *">
-          <input name="customerPhone" required className={inputCls} placeholder="+91 …" />
+          <input name="customerPhone" required className={inputCls} placeholder="+91 …" defaultValue={user?.phone ?? ''} key={user ? 'u-phone' : 'e-phone'} />
         </Field>
         <Field label="Email *">
-          <input name="customerEmail" type="email" required className={inputCls} placeholder="you@example.com" />
+          <input name="customerEmail" type="email" required className={inputCls} placeholder="you@example.com" defaultValue={user?.email ?? ''} key={user ? 'u-email' : 'e-email'} />
         </Field>
         <Field label="Select puja">
           <select name="pujaId" defaultValue={defaultPujaId ?? ''} className={inputCls}>

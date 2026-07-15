@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Loader2, LogIn } from 'lucide-react';
+import { login } from '@/lib/api';
 
 export function LoginForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,14 +27,12 @@ export function LoginForm() {
     };
 
     try {
-      console.log('Login Payload:', payload);
-
-      // TODO:
-      // const response = await login(payload);
-      // localStorage.setItem('token', response.token);
-      // router.push('/dashboard');
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await login(payload);
+      localStorage.setItem('np_user_token', response.token);
+      localStorage.setItem('np_user', JSON.stringify(response.user));
+      window.dispatchEvent(new Event('auth-change'));
+      
+      router.push('/');
     } catch (err) {
       setError((err as Error).message || 'Login failed');
     } finally {

@@ -5,6 +5,7 @@ import {
   Check, Flame, ListChecks, MapPin, Sparkles, Star, CalendarHeart, ChevronRight,
 } from 'lucide-react';
 import { getAllLocationSlugs, getLocation } from '@/lib/api';
+import { getFallbackLocation } from '@/lib/fallbackContent';
 import { Reveal, StaggerGroup, StaggerItem } from '@/components/motion';
 import { FaqList } from '@/components/FaqList';
 
@@ -20,26 +21,32 @@ export async function generateStaticParams() {
 export const revalidate = 600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  let loc;
   try {
-    const loc = await getLocation(params.slug);
-    return {
-      title: loc.metaTitle ?? loc.h1,
-      description: loc.metaDescription,
-      keywords: loc.keywords,
-      alternates: { canonical: loc.canonicalUrl },
-      openGraph: {
-        title: loc.metaTitle ?? loc.h1,
-        description: loc.metaDescription,
-        images: loc.ogImage ? [{ url: loc.ogImage, alt: loc.imageAlt }] : undefined,
-        url: loc.canonicalUrl,
-      },
-      other: loc.city?.geoRegion
-        ? { 'geo.region': loc.city.geoRegion, 'geo.placename': loc.city.name }
-        : undefined,
-    };
+    loc = await getLocation(params.slug);
   } catch {
+    loc = await getFallbackLocation(params.slug);
+  }
+
+  if (!loc) {
     return { title: 'Page not found' };
   }
+
+  return {
+    title: loc.metaTitle ?? loc.h1,
+    description: loc.metaDescription,
+    keywords: loc.keywords,
+    alternates: { canonical: loc.canonicalUrl },
+    openGraph: {
+      title: loc.metaTitle ?? loc.h1,
+      description: loc.metaDescription,
+      images: loc.ogImage ? [{ url: loc.ogImage, alt: loc.imageAlt }] : undefined,
+      url: loc.canonicalUrl,
+    },
+    other: loc.city?.geoRegion
+      ? { 'geo.region': loc.city.geoRegion, 'geo.placename': loc.city.name }
+      : undefined,
+  };
 }
 
 export default async function LocationPage({ params }: Props) {
@@ -47,6 +54,10 @@ export default async function LocationPage({ params }: Props) {
   try {
     loc = await getLocation(params.slug);
   } catch {
+    loc = await getFallbackLocation(params.slug);
+  }
+
+  if (!loc) {
     notFound();
   }
 
