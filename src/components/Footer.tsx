@@ -27,21 +27,20 @@ const Footer = () => {
     { name: "NamanDarshan", href: "https://namandarshan.com/" },
     { name: "Puja Services", href: "/pujas/MainPuja" },
     { name: "NamanKart", href: "https://www.namankart.com/" },
-    { name: "Prasadam Seva", href: "https://www.namandarshan.com/" },
+    { name: "Prasadam Seva", href: "https://namandarshan.com/prasadam" },
     { name: "Astro Services", href: "https://namandarshan.com/astro-naman" },
-    { name: "International Temple", href:"https://namandarshan.com/temples"},
   ];
 
   const support = [
-    { name: "About Us", href: "/about-us" },
-    { name: "News & Events", href: "/news-events" },
-    { name: "Blogs", href: "/blogs" },
-    { name: "Gallery", href: "/gallery" },
-    {name:"Media", href:"/media/aarti"},
-    { name: "Volunteer", href: "/volunteer" },
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Terms & Conditions", href: "/terms-conditions" },
-    { name: "Disclaimer", href: "/disclaimer" },
+    { name: "About Us", href: "#" },
+    // { name: "News & Events", href: "/news-events" },
+    // { name: "Blogs", href: "/blogs" },
+    // { name: "Gallery", href: "/gallery" },
+    // {name:"Media", href:"/media/aarti"},
+    // { name: "Volunteer", href: "/volunteer" },
+    { name: "Privacy Policy", href: "#" },
+    { name: "Terms & Conditions", href: "#" },
+    { name: "Disclaimer", href: "#" },
   ];
 
   return (
