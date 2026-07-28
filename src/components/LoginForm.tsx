@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate  } from 'react-router-dom';
 import { Loader2, LogIn } from 'lucide-react';
 import { login } from '@/lib/api';
 
 export function LoginForm() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -32,7 +32,7 @@ export function LoginForm() {
       localStorage.setItem('np_user', JSON.stringify(response.user));
       window.dispatchEvent(new Event('auth-change'));
       
-      router.push('/');
+      navigate('/');
     } catch (err) {
       setError((err as Error).message || 'Login failed');
     } finally {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import {Link} from 'react-router-dom';
 import { ChevronDown, Globe2, ArrowRight, MapPin } from 'lucide-react';
 import type { Country, City } from '@/lib/types';
 
@@ -68,7 +68,7 @@ export function CountryCard({
       cities.map((city) => (
         <Link
           key={city.id || city.slug}
-          href={`/city/${city.slug}`}
+          to={`/city/${city.slug}`}
           className="group flex items-center gap-1.5 rounded-full border border-saffron-100 bg-saffron-50/50 px-4 py-2 text-sm font-medium text-ink/70 transition hover:border-saffron-300 hover:bg-saffron-gradient hover:text-white"
         >
           <MapPin className="h-3.5 w-3.5" />

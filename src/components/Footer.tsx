@@ -1,6 +1,5 @@
-'use client';
-import Link from "next/link";
-import { useRouter } from "next/navigation";import {
+import { Link, useNavigate } from 'react-router-dom';
+import {
   Phone,
   Mail,
   MapPin,
@@ -13,7 +12,7 @@ import namanLogo from "@/assets/naman.webp";
 // import { openWhatsApp } from "@/services/native";
 
 const Footer = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const quickLinks = [
     { name: "Satyanarayan Puja", href: "/pujas/satyanarayan-puja" },
     { name: "Griha Pravesh Puja", href: "/pujas/griha-pravesh-puja" },
@@ -50,13 +49,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="space-y-6 ml-8">
-            <Link href="/" className="flex flex-col items-start leading-none">
+            <a href="/" className="flex flex-col items-start leading-none">
               {/* <img src={namanLogo} alt="Naman" className="h-20 w-auto object-contain" /> */}
               <img src="/images/Namanpuja_Logo.png" alt="Namanpuja Logo" className="h-28 w-auto pl-8 object-contain"/>
               <span className="text-[15px] font-bold text-primary uppercase tracking-[0.05em] mt-1 whitespace-nowrap opacity-80">
                 Seva • Suvidha • Samarpan
               </span>
-            </Link>
+            </a>
             <p className="text-white/70 leading-relaxed">
               Experience divine ease with Guided Darshan Assistance from Naman Darshan. A knowledgeable Pandit Ji will accompany you, guide you through the temple, and share insights about the temple's history and significance, prioritizing tranquility and reverence.
             </p>
@@ -81,12 +80,12 @@ const Footer = () => {
             <ul className="space-y-3">
               {support.map((link) => (
                 <li key={link.name}>
-                  <Link
+                  <a
                     href={link.href}
                     className="text-white/70 hover:text-primary transition-colors"
                   >
                     {link.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -99,7 +98,7 @@ const Footer = () => {
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
-                    href={link.href}
+                    to={link.href}
                     className="text-white/70 hover:text-primary transition-colors"
                   >
                     {link.name}
@@ -118,7 +117,7 @@ const Footer = () => {
                   {link.name === "International Temple" ? (
                     <button
                       onClick={() => {
-                          router.push('/darshan?category=international#available-darshans');                      }}
+                          navigate('/darshan?category=international#available-darshans');                      }}
                       className="text-white/70 hover:text-primary transition-colors text-left"
                     >
                       {link.name}
@@ -134,7 +133,7 @@ const Footer = () => {
                     </a>
                   ) : (
                     <Link
-                      href={link.href!}
+                      to={link.href!}
                       className="text-white/70 hover:text-primary transition-colors"
                     >
                       {link.name}

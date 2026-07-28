@@ -1,7 +1,4 @@
-'use client';
-
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { GlobalSearch } from '@/components/GlobalSearch';
@@ -17,10 +14,10 @@ function NavDropdown({ label, options, disableClick = false }: {
   label: string;
   disableClick?: boolean;
   options: { label: string; value: string; icon?: string }[]
-}){
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -43,19 +40,19 @@ function NavDropdown({ label, options, disableClick = false }: {
       {open && (
         <div className="absolute top-8 left-0 z-50 min-w-[220px] rounded-2xl bg-gray-900 py-2 shadow-xl">
           {options.map((opt) => (
-          <button
-  key={opt.label}
-  disabled={disableClick}                    // add this
-  onClick={() => {
-    if (opt.value.startsWith('http') || opt.value.startsWith('tel:') || opt.value.startsWith('mailto:')) {
-      window.open(opt.value, '_blank');
-    } else {
-      router.push(opt.value);
-    }
-    setOpen(false);
-  }}
-  className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3 disabled:cursor-default disabled:pointer-events-none"  // add disabled: classes
->
+            <button
+              key={opt.label}
+              disabled={disableClick}
+              onClick={() => {
+                if (opt.value.startsWith('http') || opt.value.startsWith('tel:') || opt.value.startsWith('mailto:')) {
+                  window.open(opt.value, '_blank');
+                } else {
+                  navigate(opt.value);
+                }
+                setOpen(false);
+              }}
+              className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3 disabled:cursor-default disabled:pointer-events-none"
+            >
               {opt.icon && <span className="text-base">{opt.icon}</span>}
               {opt.label}
             </button>
@@ -65,10 +62,11 @@ function NavDropdown({ label, options, disableClick = false }: {
     </div>
   );
 }
+
 function UserMenu({ name, onLogout }: { name: string; onLogout: () => void }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -94,7 +92,7 @@ function UserMenu({ name, onLogout }: { name: string; onLogout: () => void }) {
         <div className="absolute top-11 right-0 z-50 min-w-[180px] rounded-2xl bg-gray-900 py-2 shadow-xl">
           <button
             onClick={() => {
-              router.push('/account');
+              navigate('/account');
               setOpen(false);
             }}
             className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors"
@@ -117,7 +115,7 @@ function UserMenu({ name, onLogout }: { name: string; onLogout: () => void }) {
 }
 
 export function Navbar({ countries, cities, pujas }: NavbarProps) {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
 
@@ -140,9 +138,9 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
         setUser(null);
       }
     }
-    
+
     loadUser();
-    
+
     window.addEventListener('auth-change', loadUser);
     window.addEventListener('storage', loadUser);
     return () => {
@@ -156,15 +154,16 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
     localStorage.removeItem('np_user');
     setUser(null);
     window.dispatchEvent(new Event('auth-change'));
-    router.push('/');
+    navigate('/');
   }
 
   return (
-<header className={`fixed top-0 left-0 right-0 z-50 w-full transition-colors duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>      <div className="container mx-auto px-4">
+    <header className={`fixed top-0 left-0 right-0 z-50 w-full transition-colors duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+      <div className="container mx-auto px-4">
         <nav className="flex h-16 md:h-20 items-center justify-between bg-transparent">
 
           {/* Logo */}
-          <Link href="/" className="flex flex-col items-center md:items-start mx-auto md:ml-20">
+          <Link to="/" className="flex flex-col items-center md:items-start mx-auto md:ml-20">
             <img src="/images/Namanpuja_Logo.png" alt="Namanpuja Logo" className="h-12 md:h-14 w-auto object-contain pl-4" />
             <span className="text-[7px] md:text-[8px] font-bold text-primary uppercase tracking-[0.05em] whitespace-nowrap opacity-80 text-saffron-800">
               Seva • Suvidha • Samarpan
@@ -179,15 +178,15 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
           {/* Right Side */}
           <div className="hidden md:flex items-center gap-6 md:mr-20">
             <NavDropdown
-  label="Book Puja"
-  options={[
-    { label: 'Home Puja', value: '/pujas/MainPuja?category=Home Pujas' },
-    { label: 'Griha Pravesh Puja', value: '/pujas/MainPuja?category=Griha Pravesh' },
-    { label: 'Special Anusthan', value: '/pujas/MainPuja?category=Special Anushthan' },
-    { label: 'Festival Puja', value: '/pujas/MainPuja?category=Festival Pujas' },
-    { label: 'Explore More', value: '/pujas/MainPuja' },
-  ]}
-/>
+              label="Book Puja"
+              options={[
+                { label: 'Home Puja', value: '/pujas/MainPuja?category=Home Pujas' },
+                { label: 'Griha Pravesh Puja', value: '/pujas/MainPuja?category=Griha Pravesh' },
+                { label: 'Special Anusthan', value: '/pujas/MainPuja?category=Special Anushthan' },
+                { label: 'Festival Puja', value: '/pujas/MainPuja?category=Festival Pujas' },
+                { label: 'Explore More', value: '/pujas/MainPuja' },
+              ]}
+            />
             <NavDropdown
               label="Choose Location"
               options={[
@@ -200,7 +199,7 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
             />
             <NavDropdown
               label="Contact Info"
-                disableClick
+              disableClick
               options={[
                 { label: '+91 9311973199', value: 'tel:+919311973199', icon: '📞' },
                 { label: '+91 8796973199', value: 'https://wa.me/918796973199', icon: '💬' },
@@ -209,10 +208,10 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
               ]}
             />
 
-           {user ? (
+            {user ? (
               <UserMenu name={user.name} onLogout={handleLogout} />
             ) : (
-              <Link href="/login" className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#f2e54a] text-black hover:bg-gray-50 h-9 px-4 rounded-full transition-all">
+              <Link to="/login" className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#f2e54a] text-black hover:bg-gray-50 h-9 px-4 rounded-full transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" />
                 </svg>
@@ -221,10 +220,10 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
             )}
 
             {/* Book a Puja CTA */}
-            
-          </div></nav>
+
           </div>
-        
-   </header>
+        </nav>
+      </div>
+    </header>
   );
 }

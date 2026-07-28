@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, UserPlus } from 'lucide-react';
 import { register } from '@/lib/api';
 
@@ -55,7 +54,7 @@ function normalizeErrorMessage(rawMessage: string): string {
 }
 
 export function RegistrationForm() {
-  const router = useRouter();
+const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -135,7 +134,7 @@ export function RegistrationForm() {
       localStorage.setItem('np_user', JSON.stringify(response.user));
       window.dispatchEvent(new Event('auth-change'));
 
-      router.push('/');
+      navigate('/');
     } catch (err) {
       attemptsRef.current += 1;
 
@@ -254,7 +253,7 @@ export function RegistrationForm() {
       <p className="text-center text-sm text-ink/60">
         Already have an account?{' '}
         <Link
-          href="/login"
+          to="/login"
           className="font-medium text-saffron-700 hover:text-saffron-800"
         >
           Login

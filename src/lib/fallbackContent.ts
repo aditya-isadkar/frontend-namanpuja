@@ -7,9 +7,9 @@ import type { PujaLocation, Puja, City } from './types';
 const SITE = 'https://www.namanpuja.com';
 
 /**
- * Generate fallback location content for Oman and UAE cities
- * dynamically if they are not in the database.
- * If static content is available (Ganesh Puja), it uses that.
+ * Generate fallback location content for any city+puja combination
+ * that is not in the database.
+ * If static content is available (Oman/UAE Ganesh Puja), it uses that.
  */
 export async function getFallbackLocation(slug: string): Promise<PujaLocation | null> {
   const [pujas, cities] = await Promise.all([getPujas(), getAllCitiesWithCountry()]);
@@ -24,15 +24,13 @@ export async function getFallbackLocation(slug: string): Promise<PujaLocation | 
         city.country?.slug === 'united-arab-emirates' ||
         city.country?.slug === 'uae';
 
-      if (!isOman && !isUAE) continue;
-
       const slugWithState = pujaLocationSlug(puja.name, city.name, city.state);
       const slugWithoutState = pujaLocationSlug(puja.name, city.name, null);
 
       if (slug === slugWithState || slug === slugWithoutState) {
         // Found the combination!
 
-        const countryName = isOman ? 'Oman' : 'UAE';
+        const countryName = city.country?.name ?? '';
         const place = city.state ? `${city.name}, ${city.state}` : `${city.name}, ${countryName}`;
 
         // 1. Check if we have specific static Google Doc content for this city + puja

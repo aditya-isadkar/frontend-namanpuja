@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Globe2, ArrowRight, Loader2 } from 'lucide-react';
 import type { City, Country } from '@/lib/types';
@@ -9,7 +9,7 @@ import { API_URL } from '@/lib/api';
 import { Sparkles, Landmark, } from 'lucide-react';
 
 export function FlowSelector({ countries }: { countries: Country[] }) {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [country, setCountry] = useState<Country | null>(null);
   const [cities, setCities] = useState<City[]>([]);
   const [loading, setLoading] = useState(false);
@@ -118,7 +118,7 @@ export function FlowSelector({ countries }: { countries: Country[] }) {
                   {cities.map((city) => (
                     <button
                       key={city.id}
-                      onClick={() => router.push(`/city/${city.slug}`)}
+                      onClick={() => navigate(`/city/${city.slug}`)}
                       className="group flex items-center justify-between rounded-2xl border border-saffron-100 bg-cream p-4 text-left transition-all hover:-translate-y-1 hover:border-saffron-300 hover:shadow-soft"
                     >
                       <span>

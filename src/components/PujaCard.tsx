@@ -1,4 +1,4 @@
-import Link from "next/link";
+import {Link} from "react-router-dom";
 import { Flame, Clock, ArrowRight } from "lucide-react";
 import type { Puja } from "@/lib/types";
 
@@ -14,7 +14,7 @@ export function PujaCard({ puja, href }: { puja: Puja; href?: string }) {
     : null;
   return (
     <Link
-      href={href ?? `/pujas/${puja.slug}`}
+      to={href ?? `/pujas/${puja.slug}`}
       className="card group flex flex-col"
     >
       <div className="flex items-start justify-between">

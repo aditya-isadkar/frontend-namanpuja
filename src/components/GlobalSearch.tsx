@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { Search, Globe2, MapPin, Flame, Sparkles } from 'lucide-react';
 import type { Country, City, Puja } from '@/lib/types';
 
@@ -15,8 +15,7 @@ export function GlobalSearch({ countries, cities, pujas }: GlobalSearchProps) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-
+const navigate = useNavigate();
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -59,7 +58,7 @@ export function GlobalSearch({ countries, cities, pujas }: GlobalSearchProps) {
   function handleSelect(href: string) {
     setQuery('');
     setOpen(false);
-    router.push(href);
+    navigate(href);
   }
 
   return (

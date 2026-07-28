@@ -1,22 +1,10 @@
 import type { City, Country, Puja, PujaLocation, Temple } from './types';
 
-// On the server (SSR/SSG/Docker), prefer API_INTERNAL_URL so the container can
-// reach the backend over the internal network (e.g. http://backend:4000/api).
-// In the browser, always use the public NEXT_PUBLIC_API_URL. Falls back cleanly
-// when API_INTERNAL_URL isn't set (e.g. on Vercel), so this is production-safe.
-const API_URL =
-  (typeof window === 'undefined'
-    ? process.env.API_INTERNAL_URL ?? process.env.NEXT_PUBLIC_API_URL
-    : process.env.NEXT_PUBLIC_API_URL) ?? 'http://localhost:4000/api';
+// In a Vite SPA all code runs in the browser — use VITE_API_URL from .env
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
 
-interface FetchOpts {
-  /** ISR revalidate seconds (server components). */
-  revalidate?: number;
-}
-
-async function api<T>(path: string, opts: FetchOpts = {}): Promise<T> {
+async function api<T>(path: string): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
-    next: { revalidate: opts.revalidate ?? 300 },
     headers: { Accept: 'application/json' },
     signal: AbortSignal.timeout(15_000),
   });
@@ -34,6 +22,7 @@ async function safe<T>(promise: Promise<T>, fallback: T): Promise<T> {
     return fallback;
   }
 }
+
 
 export const getCountries = () => safe(api<Country[]>('/countries'), []);
 

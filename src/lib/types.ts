@@ -93,6 +93,8 @@ export interface PujaLocation {
   imageAlt?: string;
   puja?: Puja;
   city?: City;
+  cityName?: string;
+  countryName?: string;
 }
 
 export interface Temple {
