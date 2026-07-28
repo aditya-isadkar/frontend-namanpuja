@@ -5,6 +5,7 @@
   "description": "Public website for namanpuja.com — book authentic Vedic pujas at home or online",
   "scripts": {
     "dev": "vite",
+    
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
