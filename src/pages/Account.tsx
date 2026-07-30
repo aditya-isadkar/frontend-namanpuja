@@ -186,7 +186,7 @@ export default function Account() {
           <h2 className="mb-4 text-lg font-bold text-ink">My Puja Bookings</h2>
           <p className="text-sm text-gray-500">
             You haven't made any bookings yet.{' '}
-            <Link to="/pujas/MainPuja" className="font-semibold text-saffron-600 hover:underline">
+            <Link to="/pujas/mainpuja" className="font-semibold text-saffron-600 hover:underline">
               Browse Pujas
             </Link>
           </p>

@@ -66,7 +66,7 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.18 }}
             className="mt-8 flex flex-wrap items-center gap-4"
           >
-            <Link to="/MainLocation" className="btn-primary">
+            <Link to="/mainlocation" className="btn-primary">
               Find Pujas in Your City <ArrowRight className="h-4 w-4" />
             </Link>
             <Link to="/book" className="btn-ghost">

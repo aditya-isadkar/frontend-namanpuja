@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, Flame, Clock } from 'lucide-react';
 import { getPujas } from '@/lib/api';
 import { Reveal } from '@/components/motion';
@@ -8,10 +8,16 @@ import type { Puja } from '@/lib/types';
 
 export default function MainPuja() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [allPujas, setAllPujas] = useState<Puja[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [category, setCategory] = useState('');
+  const [serviceType, setServiceType] = useState('');
+  const [deity, setDeity] = useState('');
+
   const q = searchParams.get('q')?.toLowerCase().trim() ?? '';
+  const sort = searchParams.get('sort') ?? '';
 
   useEffect(() => {
     document.title = 'All Poojas';
@@ -31,21 +37,47 @@ export default function MainPuja() {
     };
   }, []);
 
-  const pujas = q
-    ? allPujas.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-p.deity?.toLowerCase().includes(q) ||       
-   p.subtitle?.toLowerCase().includes(q)
-      )
-    : allPujas;
+  const handleReset = () => {
+    setCategory('');
+    setServiceType('');
+    setDeity('');
+    navigate('/pujas/mainpuja', { replace: true });
+  };
+
+  const filteredPujas = allPujas.filter((p) => {
+    const matchesQ = q
+      ? p.name.toLowerCase().includes(q) ||
+        p.deity?.toLowerCase().includes(q) ||
+        p.subtitle?.toLowerCase().includes(q)
+      : true;
+
+    // ⚠️ assumption: category name lives at p.category?.name
+    const matchesCategory = category ? p.category?.name === category : true;
+
+    // BOTH-tagged pujas should also show when "At home" or "Online" is picked individually
+    const matchesServiceType = serviceType
+      ? p.serviceType === serviceType || p.serviceType === 'BOTH'
+      : true;
+
+    const matchesDeity = deity
+      ? p.deity?.toLowerCase().includes(deity.toLowerCase())
+      : true;
+
+    return matchesQ && matchesCategory && matchesServiceType && matchesDeity;
+  });
+
+  const pujas = [...filteredPujas].sort((a, b) => {
+    if (sort === 'alpha') return a.name.localeCompare(b.name);
+    if (sort === 'popular') return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+    return 0; // 'date' sort skipped — no date field on Puja yet
+  });
 
   return (
     <div className="container-page py-28">
       {/* Search bar */}
 
       <Reveal>
-        <form className="relative mb-8">
+        <form className="relative mb-8" key={q}>
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/40" />
           <input
             type="text"
@@ -62,21 +94,34 @@ p.deity?.toLowerCase().includes(q) ||
         <aside className="w-full shrink-0 rounded-2xl bg-[#faf5ec] p-5 lg:w-64">
           <h3 className="mb-4 text-xs font-bold uppercase tracking-wide text-ink/60">Filters</h3>
           <div className="space-y-3">
-            <select className="w-full rounded-lg border border-saffron-200 bg-white px-3 py-2 text-sm text-ink/80 focus:border-saffron-400 focus:outline-none">
-              <option value="">Occasion</option>
-              <option>Housewarming</option>
-              <option>Wedding</option>
-              <option>Birthday</option>
-              <option>New baby</option>
-              <option>Festival</option>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full rounded-lg border border-saffron-200 bg-white px-3 py-2 text-sm text-ink/80 focus:border-saffron-400 focus:outline-none"
+            >
+              <option value="">Category</option>
+              <option value="Home Pujas">Home Pujas</option>
+              <option value="Griha Pravesh">Griha Pravesh</option>
+              <option value="Festival Pujas">Festival Pujas</option>
+              <option value="Special Anushthan">Special Anushthan</option>
             </select>
-            <select className="w-full rounded-lg border border-saffron-200 bg-white px-3 py-2 text-sm text-ink/80 focus:border-saffron-400 focus:outline-none">
+
+            <select
+              value={serviceType}
+              onChange={(e) => setServiceType(e.target.value)}
+              className="w-full rounded-lg border border-saffron-200 bg-white px-3 py-2 text-sm text-ink/80 focus:border-saffron-400 focus:outline-none"
+            >
               <option value="">Service type</option>
-              <option>At home</option>
-              <option>At temple</option>
-              <option>Either</option>
+              <option value="HOME_VISIT">At home</option>
+              <option value="EPUJA">Online</option>
+              <option value="BOTH">Both Home and Online</option>
             </select>
-            <select className="w-full rounded-lg border border-saffron-200 bg-white px-3 py-2 text-sm text-ink/80 focus:border-saffron-400 focus:outline-none">
+
+            <select
+              value={deity}
+              onChange={(e) => setDeity(e.target.value)}
+              className="w-full rounded-lg border border-saffron-200 bg-white px-3 py-2 text-sm text-ink/80 focus:border-saffron-400 focus:outline-none"
+            >
               <option value="">Deity</option>
               <option>Ganesha</option>
               <option>Vishnu</option>
@@ -84,6 +129,14 @@ p.deity?.toLowerCase().includes(q) ||
               <option>Shiva</option>
               <option>Navagraha</option>
             </select>
+
+            <button
+              type="button"
+              onClick={handleReset}
+              className="w-full rounded-lg border border-saffron-200 bg-white px-3 py-2 text-sm font-medium text-ink/60 hover:bg-saffron-50 hover:text-saffron-700"
+            >
+              Reset filters
+            </button>
           </div>
         </aside>
 

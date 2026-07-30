@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { GlobalSearch } from '@/components/GlobalSearch';
 import type { Country, City, Puja } from '@/lib/types';
 
@@ -10,14 +10,12 @@ interface NavbarProps {
   pujas: Puja[];
 }
 
-function NavDropdown({ label, options, disableClick = false }: {
+function NavDropdown({ label, options }: {
   label: string;
-  disableClick?: boolean;
   options: { label: string; value: string; icon?: string }[]
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -40,22 +38,55 @@ function NavDropdown({ label, options, disableClick = false }: {
       {open && (
         <div className="absolute top-8 left-0 z-50 min-w-[220px] rounded-2xl bg-gray-900 py-2 shadow-xl">
           {options.map((opt) => (
-            <button
+            <a
               key={opt.label}
-              disabled={disableClick}
-              onClick={() => {
-                if (opt.value.startsWith('http') || opt.value.startsWith('tel:') || opt.value.startsWith('mailto:')) {
-                  window.open(opt.value, '_blank');
-                } else {
-                  navigate(opt.value);
-                }
-                setOpen(false);
-              }}
-              className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3 disabled:cursor-default disabled:pointer-events-none"
+              href={opt.value}
+              target={opt.value.startsWith('http') ? '_blank' : undefined}
+              rel={opt.value.startsWith('http') ? 'noopener noreferrer' : undefined}
+              onClick={() => setOpen(false)}
+              className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3"
             >
               {opt.icon && <span className="text-base">{opt.icon}</span>}
               {opt.label}
-            </button>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileAccordion({ label, options, onNavigate }: {
+  label: string;
+  options: { label: string; value: string; icon?: string }[];
+  onNavigate: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border-b border-gray-200">
+      <button
+        onClick={() => setOpen((p) => !p)}
+        className="w-full flex items-center justify-between py-4 text-left text-base font-bold text-saffron-600"
+      >
+        {label}
+        <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="pb-3 pl-2 flex flex-col">
+          {options.map((opt) => (
+            <a
+              key={opt.label}
+              href={opt.value}
+              target={opt.value.startsWith('http') ? '_blank' : undefined}
+              rel={opt.value.startsWith('http') ? 'noopener noreferrer' : undefined}
+              onClick={onNavigate}
+              className="py-2.5 text-sm font-semibold text-gray-700 flex items-center gap-3"
+            >
+              {opt.icon && <span className="text-base">{opt.icon}</span>}
+              {opt.label}
+            </a>
           ))}
         </div>
       )}
@@ -118,6 +149,7 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -149,18 +181,65 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
     };
   }, []);
 
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
+
+  // Close the mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [navigate]);
+
   function handleLogout() {
     localStorage.removeItem('np_user_token');
     localStorage.removeItem('np_user');
     setUser(null);
     window.dispatchEvent(new Event('auth-change'));
+    setMobileOpen(false);
     navigate('/');
   }
 
+  const bookPujaOptions = [
+    { label: 'Home Puja', value: '/pujas/mainpuja?category=Home Pujas' },
+    { label: 'Griha Pravesh Puja', value: '/pujas/mainpuja?category=Griha Pravesh' },
+    { label: 'Special Anusthan', value: '/pujas/mainpuja?category=Special Anushthan' },
+    { label: 'Festival Puja', value: '/pujas/mainpuja?category=Festival Pujas' },
+    { label: 'Explore More', value: '/pujas/mainpuja' },
+  ];
+
+  const locationOptions = [
+    { label: 'India', value: '/mainlocation' },
+    { label: 'United States', value: '/mainlocation' },
+    { label: 'United Kingdom', value: '/mainlocation' },
+    { label: 'Australia', value: '/mainlocation' },
+    { label: 'Explore More', value: '/mainlocation' },
+  ];
+
+  const contactOptions = [
+    { label: '+91 9311973199', value: 'tel:+919311973199', icon: '📞' },
+    { label: '+91 8796973199', value: 'https://wa.me/918796973199', icon: '💬' },
+    { label: 'support@namanpuja.com', value: 'mailto:support@namanpuja.com', icon: '🎗️' },
+    { label: 'sales@namanpuja.com', value: 'mailto:sales@namanpuja.com', icon: '💼' },
+  ];
+
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 w-full transition-colors duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 w-full transition-colors duration-300 ${scrolled || mobileOpen ? 'bg-white shadow-md' : 'bg-transparent'}`}>
       <div className="container mx-auto px-4">
         <nav className="flex h-16 md:h-20 items-center justify-between bg-transparent">
+
+          {/* Mobile burger button */}
+          <button
+            onClick={() => setMobileOpen((p) => !p)}
+            className="md:hidden flex items-center justify-center h-10 w-10 -ml-2 text-saffron-600 bg-transparent border-none outline-none focus:outline-none"
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
 
           {/* Logo */}
           <Link to="/" className="flex flex-col items-center md:items-start mx-auto md:ml-20">
@@ -170,43 +249,16 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
             </span>
           </Link>
 
-          {/* Search Bar */}
+          {/* Search Bar (desktop) */}
           <div className="hidden md:flex flex-1 max-w-xl mx-6">
             <GlobalSearch countries={countries} cities={cities} pujas={pujas} />
           </div>
 
-          {/* Right Side */}
+          {/* Right Side (desktop) */}
           <div className="hidden md:flex items-center gap-6 md:mr-20">
-            <NavDropdown
-              label="Book Puja"
-              options={[
-                { label: 'Home Puja', value: '/pujas/MainPuja?category=Home Pujas' },
-                { label: 'Griha Pravesh Puja', value: '/pujas/MainPuja?category=Griha Pravesh' },
-                { label: 'Special Anusthan', value: '/pujas/MainPuja?category=Special Anushthan' },
-                { label: 'Festival Puja', value: '/pujas/MainPuja?category=Festival Pujas' },
-                { label: 'Explore More', value: '/pujas/MainPuja' },
-              ]}
-            />
-            <NavDropdown
-              label="Choose Location"
-              options={[
-                { label: 'India', value: '/MainLocation' },
-                { label: 'United States', value: '/MainLocation' },
-                { label: 'United Kingdom', value: '/MainLocation' },
-                { label: 'Australia', value: '/MainLocation' },
-                { label: 'Explore More', value: '/MainLocation' },
-              ]}
-            />
-            <NavDropdown
-              label="Contact Info"
-              disableClick
-              options={[
-                { label: '+91 9311973199', value: 'tel:+919311973199', icon: '📞' },
-                { label: '+91 8796973199', value: 'https://wa.me/918796973199', icon: '💬' },
-                { label: 'support@namanpuja.com', value: 'mailto:support@namanpuja.com', icon: '🎗️' },
-                { label: 'sales@namanpuja.com', value: 'mailto:sales@namanpuja.com', icon: '💼' },
-              ]}
-            />
+            <NavDropdown label="Book Puja" options={bookPujaOptions} />
+            <NavDropdown label="Choose Location" options={locationOptions} />
+            <NavDropdown label="Contact Info" options={contactOptions} />
 
             {user ? (
               <UserMenu name={user.name} onLogout={handleLogout} />
@@ -218,12 +270,56 @@ export function Navbar({ countries, cities, pujas }: NavbarProps) {
                 Login
               </Link>
             )}
+          </div>
 
-            {/* Book a Puja CTA */}
-
+          {/* Mobile: account/login icon stays visible next to burger */}
+          <div className="md:hidden">
+            {user ? (
+              <UserMenu name={user.name} onLogout={handleLogout} />
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-1.5 text-xs font-bold bg-[#f2e54a] text-black h-8 px-3 rounded-full transition-all"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </nav>
       </div>
+
+      {/* Mobile menu panel */}
+      {mobileOpen && (
+        <div className="md:hidden bg-white border-t border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="container mx-auto px-4 py-4">
+            <div className="mb-2">
+              <GlobalSearch countries={countries} cities={cities} pujas={pujas} />
+            </div>
+
+            <MobileAccordion label="Book Puja" options={bookPujaOptions} onNavigate={() => setMobileOpen(false)} />
+            <MobileAccordion label="Choose Location" options={locationOptions} onNavigate={() => setMobileOpen(false)} />
+            <MobileAccordion label="Contact Info" options={contactOptions} onNavigate={() => setMobileOpen(false)} />
+
+            {user && (
+              <div className="pt-4 flex flex-col gap-1">
+                <Link
+                  to="/account"
+                  onClick={() => setMobileOpen(false)}
+                  className="py-2.5 text-sm font-semibold text-gray-700"
+                >
+                  My Account
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="py-2.5 text-left text-sm font-semibold text-gray-700 bg-transparent border-none"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

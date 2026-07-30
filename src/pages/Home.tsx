@@ -21,8 +21,10 @@ export default function Home() {
     getTemples().then(setTemples);
   }, []);
 
-  const featuredPujas = pujas.filter((p) => p.isFeatured).slice(0, 6);
-  const pujaList = featuredPujas.length ? featuredPujas : pujas.slice(0, 6);
+    const featuredPujas = pujas.filter((p) => p.isFeatured);
+  const pujaList = featuredPujas.length >= 6
+    ? featuredPujas.slice(0, 6)
+    : [...featuredPujas, ...pujas.filter((p) => !p.isFeatured)].slice(0, 6);
 
   return (
     <>
@@ -41,11 +43,12 @@ export default function Home() {
                 Authentic Vedic rituals for every occasion — at your home or online, performed by experienced priests.
               </p>
             </div>
-            <Link to="/pujas/MainPuja" className="btn-ghost shrink-0">
+            <Link to="/pujas/mainpuja" className="btn-ghost shrink-0">
               View all pujas <ArrowRight className="h-4 w-4" />
             </Link>
+            
           </div>
-
+          
           <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {pujaList.map((p) => (
               <StaggerItem key={p.id || p.slug}>
