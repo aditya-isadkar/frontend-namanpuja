@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { getCountries, getPujas, getTemples } from '@/lib/api';
@@ -10,21 +10,41 @@ import { PujaCard } from '@/components/PujaCard';
 import { StaggerGroup, StaggerItem } from '@/components/motion';
 import { PujaSection } from '@/components/PujaSection';
 
+const FEATURED_LIMIT = 6;
+
 export default function Home() {
   const [countries, setCountries] = useState<Country[]>([]);
   const [pujas, setPujas] = useState<Puja[]>([]);
   const [_temples, setTemples] = useState<Temple[]>([]);
 
   useEffect(() => {
-    getCountries().then(setCountries);
-    getPujas().then(setPujas);
-    getTemples().then(setTemples);
+    let isMounted = true;
+
+    Promise.all([getCountries(), getPujas(), getTemples()])
+      .then(([countriesData, pujasData, templesData]) => {
+        if (!isMounted) return;
+        setCountries(countriesData);
+        setPujas(pujasData);
+        setTemples(templesData);
+      })
+      .catch((err) => {
+        // surface fetch failures instead of silently leaving empty state
+        console.error('Failed to load home page data:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-    const featuredPujas = pujas.filter((p) => p.isFeatured);
-  const pujaList = featuredPujas.length >= 6
-    ? featuredPujas.slice(0, 6)
-    : [...featuredPujas, ...pujas.filter((p) => !p.isFeatured)].slice(0, 6);
+  const pujaList = useMemo(() => {
+    const featured = pujas.filter((p) => p.isFeatured);
+    if (featured.length >= FEATURED_LIMIT) {
+      return featured.slice(0, FEATURED_LIMIT);
+    }
+    const rest = pujas.filter((p) => !p.isFeatured);
+    return [...featured, ...rest].slice(0, FEATURED_LIMIT);
+  }, [pujas]);
 
   return (
     <>
@@ -46,12 +66,11 @@ export default function Home() {
             <Link to="/pujas/mainpuja" className="btn-ghost shrink-0">
               View all pujas <ArrowRight className="h-4 w-4" />
             </Link>
-            
           </div>
-          
+
           <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {pujaList.map((p) => (
-              <StaggerItem key={p.id || p.slug}>
+              <StaggerItem key={p.id ?? p.slug}>
                 <PujaCard puja={p} />
               </StaggerItem>
             ))}
