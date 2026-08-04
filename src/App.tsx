@@ -9,8 +9,8 @@ import Account from '@/pages/Account';
 import CityDetail from '@/pages/CityDetail';
 import LocationDetail from '@/pages/LocationDetail';
 import PujaDetail from '@/pages/PujaDetail';
-import MainPuja from '@/pages/MainPuja';
-import MainLocation from '@/pages/MainLocation';
+import MainPuja from '@/pages/mainpuja';
+import MainLocation from '@/pages/mainlocation';
 
 export default function App() {
   return (

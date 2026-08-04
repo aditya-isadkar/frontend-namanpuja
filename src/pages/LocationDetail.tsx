@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
-  Check, Flame, ListChecks, MapPin, Sparkles, Star, CalendarHeart, ChevronRight,
+  Check, Clock, Flame, ListChecks, MapPin, Sparkles, Star, CalendarHeart, ChevronRight,
 } from 'lucide-react';
 import { getLocation } from '@/lib/api';
 import { getFallbackLocation } from '@/lib/fallbackContent';
-import type { PujaLocation } from '@/lib/types';
+import type { PujaLocation, ContentBlockType } from '@/lib/types';
 import { Reveal, StaggerGroup, StaggerItem } from '@/components/motion';
 import { FaqList } from '@/components/FaqList';
+import { RahuKaalCard } from '@/components/RahuKaalCard';
 
 // ─────────────────────────────────────────────────────────────
 // <head> helpers — upsert instead of duplicate on every mount
@@ -45,6 +46,121 @@ function setCanonical(href?: string) {
   el.setAttribute('href', href);
 }
 
+// ─────────────────────────────────────────────────────────────
+// Block renderer — same block format as the Content Builder
+// (heading / paragraph / image / timing / table / rahu_kal)
+// ─────────────────────────────────────────────────────────────
+function BlockRenderer({
+  block,
+  cityName,
+  countryName,
+  latitude,
+  longitude,
+}: {
+  block: ContentBlockType;
+  cityName?: string;
+  countryName?: string;
+  latitude?: number;
+  longitude?: number;
+}) {
+  switch (block.type) {
+    case 'heading':
+      return (
+        <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-ink first:mt-0">
+          {block.value}
+        </h2>
+      );
+
+    case 'paragraph':
+      return (
+        <div
+          className="mt-4 rounded-xl p-4 leading-relaxed text-ink/80"
+          style={{ backgroundColor: block.bgColor && block.bgColor !== '#ffffff' ? block.bgColor : undefined }}
+        >
+          {block.value}
+        </div>
+      );
+
+    case 'image':
+      return block.value ? (
+        <img
+          src={block.value}
+          alt=""
+          className="mt-6 w-full rounded-2xl border border-saffron-100 object-cover shadow-sm"
+        />
+      ) : null;
+
+    case 'timing':
+      return (
+        <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-saffron-100 bg-saffron-50/60 px-4 py-2 text-sm">
+          <Clock className="h-4 w-4 text-saffron-700" />
+          <span className="font-medium text-ink">{block.value.label}</span>
+          <span className="text-ink/60">· {block.value.time}</span>
+        </div>
+      );
+
+    case 'rahu_kal':
+      return (
+        <RahuKaalCard
+          cityName={cityName}
+          countryName={countryName}
+          latitude={latitude}
+          longitude={longitude}
+          customTitle={(block.value as any)?.label}
+          customNote={(block.value as any)?.note}
+        />
+      );
+
+    case 'table':
+      return (
+        <div className="mt-6 overflow-x-auto rounded-xl border border-saffron-100">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="bg-saffron-50/60">
+                {block.value.columns.map((col, i) => (
+                  <th key={i} className="border-b border-saffron-100 px-4 py-2 text-left font-semibold text-ink">
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.value.rows.map((row, ri) => (
+                <tr key={ri} className="odd:bg-white even:bg-saffron-50/20">
+                  {row.cells.map((cell, ci) => (
+                    <td key={ci} className="border-b border-saffron-100/70 px-4 py-2 text-ink/80">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+
+    default:
+      return null;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Normalise a section entry into a ContentBlockType array.
+// Handles both old  { heading, body }  and new block format
+// { type, value, ... } that the Content Builder saves.
+// ─────────────────────────────────────────────────────────────
+function sectionToBlocks(s: NonNullable<PujaLocation['sections']>[number]): ContentBlockType[] {
+  // Already a proper block (has .type field)
+  if (s.type) {
+    return [s as unknown as ContentBlockType];
+  }
+  // Legacy format — convert to heading + paragraph blocks
+  const blocks: ContentBlockType[] = [];
+  if (s.heading) blocks.push({ type: 'heading', value: s.heading });
+  if (s.body)    blocks.push({ type: 'paragraph', value: s.body });
+  return blocks;
+}
+
 export default function LocationDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -57,7 +173,7 @@ export default function LocationDetail() {
     (async () => {
       try {
         const data = await getLocation(slug);
-        if (data && (data.sections?.length || data.benefits?.length || data.faqs?.length)) {
+        if (data && (data.sections?.length || data.blocks?.length || data.benefits?.length || data.faqs?.length)) {
           setLoc(data);
           setLoading(false);
           return;
@@ -99,6 +215,12 @@ export default function LocationDetail() {
   if (!loc) return null;
 
   const bookHref = `/book?puja=${loc.puja?.id ?? ''}&city=${loc.city?.id ?? ''}`;
+
+  // Hero image: prefer featuredImage / heroImage / ogImage, fall back to puja heroImage
+  const heroImage = loc.featuredImage || loc.heroImage || loc.ogImage || loc.puja?.heroImage;
+
+  // Normalise sections into blocks so BlockRenderer handles them
+  const sectionBlocks: ContentBlockType[] = (loc.sections ?? []).flatMap(sectionToBlocks);
 
   // Same JSON-LD shape as the Next.js version: Service + FAQPage + Breadcrumb
   const jsonLd = [
@@ -169,16 +291,67 @@ export default function LocationDetail() {
         </div>
       </section>
 
+      {/* Featured / Hero image */}
+      {heroImage && (
+        <div className="container-page -mt-4 mb-4">
+          <Reveal>
+            <img
+              src={heroImage}
+              alt={loc.imageAlt ?? loc.h1}
+              className="aspect-[16/7] w-full rounded-3xl border border-saffron-100 object-cover shadow-sm"
+            />
+          </Reveal>
+        </div>
+      )}
+
       <div className="container-page grid gap-12 py-16 lg:grid-cols-[1fr_320px]">
         <article className="prose-puja max-w-none">
           {loc.intro && <Reveal><p className="text-lg leading-relaxed text-ink/80">{loc.intro}</p></Reveal>}
 
-          {loc.sections?.map((s) => (
-            <Reveal key={s.heading}>
-              <h2>{s.heading}</h2>
-              <p>{s.body}</p>
+          <Reveal>
+            <RahuKaalCard
+              cityName={loc.city?.name || loc.cityName || 'Delhi'}
+              countryName={loc.countryName || loc.city?.country?.name}
+              latitude={loc.city?.latitude}
+              longitude={loc.city?.longitude}
+            />
+          </Reveal>
+
+          {/* ── Content Builder blocks (image, table, heading, etc.) ── */}
+          {loc.blocks?.length ? (
+            <Reveal>
+              <div className="mt-4">
+                {loc.blocks.map((block, i) => (
+                  <BlockRenderer
+                    key={i}
+                    block={block}
+                    cityName={loc.city?.name || loc.cityName}
+                    countryName={loc.countryName || loc.city?.country?.name}
+                    latitude={loc.city?.latitude}
+                    longitude={loc.city?.longitude}
+                  />
+                ))}
+              </div>
             </Reveal>
-          ))}
+          ) : null}
+
+          {/* ── Sections (supports both legacy {heading,body} and block format) ── */}
+          {sectionBlocks.length ? (
+            <Reveal>
+              <div className="mt-4">
+                {sectionBlocks.map((block, i) => (
+                  <BlockRenderer
+                    key={i}
+                    block={block}
+                    cityName={loc.city?.name || loc.cityName}
+                    countryName={loc.countryName || loc.city?.country?.name}
+                    latitude={loc.city?.latitude}
+                    longitude={loc.city?.longitude}
+                  />
+                ))}
+              </div>
+            </Reveal>
+          ) : null}
 
           {loc.benefits?.length ? (
             <Reveal>

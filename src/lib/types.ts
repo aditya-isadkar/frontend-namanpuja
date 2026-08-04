@@ -68,13 +68,24 @@ export interface Faq {
   answer: string;
 }
 
+export type ContentBlockType =
+  | { type: 'heading'; value: string }
+  | { type: 'paragraph'; value: string; bgColor?: string }
+  | { type: 'image'; value: string }
+  | { type: 'timing'; value: { label: string; time: string } }
+  | { type: 'table'; value: { columns: string[]; rows: { cells: string[] }[] } }
+  | { type: 'rahu_kal'; value?: { label?: string; note?: string } };
+
 export interface PujaLocation {
   id: string;
   slug: string;
   h1: string;
   heroTagline?: string;
   intro?: string;
-  sections?: { heading: string; body: string }[];
+  featuredImage?: string;
+  heroImage?: string;
+  sections?: { heading?: string; body?: string; type?: string; value?: any }[];
+  blocks?: ContentBlockType[];
   benefits?: string[];
   rituals?: NamedDescription[];
   samagri?: SamagriGroup[];

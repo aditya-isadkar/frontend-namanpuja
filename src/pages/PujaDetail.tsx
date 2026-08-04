@@ -13,6 +13,7 @@ import {
 import { getPuja } from '@/lib/api';
 import type { Puja } from '@/lib/types';
 import { Reveal } from '@/components/motion';
+import { RahuKaalCard } from '@/components/RahuKaalCard';
 
 // ─────────────────────────────────────────────────────────────
 // Content block types — mirrors the Bhakti Page Content Builder
@@ -26,7 +27,11 @@ type TableBlock = {
   type: 'table';
   value: { columns: string[]; rows: { cells: string[] }[] };
 };
-type ContentBlock = HeadingBlock | ParagraphBlock | ImageBlock | TimingBlock | TableBlock;
+type RahuKalBlock = {
+  type: 'rahu_kal';
+  value?: { label?: string; note?: string };
+};
+type ContentBlock = HeadingBlock | ParagraphBlock | ImageBlock | TimingBlock | TableBlock | RahuKalBlock;
 
 type Faq = { question: string; answer: string };
 
@@ -42,6 +47,8 @@ type PujaWithContent = Puja & {
   bhaktiType?: 'main' | 'location';
   country?: string;
   city?: string;
+  latitude?: number;
+  longitude?: number;
   tags?: string[];
   blocks?: ContentBlock[];
   faqs?: Faq[];
@@ -51,7 +58,19 @@ type PujaWithContent = Puja & {
 // ─────────────────────────────────────────────────────────────
 // Block renderer
 // ─────────────────────────────────────────────────────────────
-function BlockRenderer({ block }: { block: ContentBlock }) {
+function BlockRenderer({
+  block,
+  cityName,
+  countryName,
+  latitude,
+  longitude,
+}: {
+  block: ContentBlock;
+  cityName?: string;
+  countryName?: string;
+  latitude?: number;
+  longitude?: number;
+}) {
   switch (block.type) {
     case 'heading':
       return (
@@ -86,6 +105,18 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
           <span className="font-medium text-ink">{block.value.label}</span>
           <span className="text-ink/60">· {block.value.time}</span>
         </div>
+      );
+
+    case 'rahu_kal':
+      return (
+        <RahuKaalCard
+          cityName={cityName}
+          countryName={countryName}
+          latitude={latitude}
+          longitude={longitude}
+          customTitle={block.value?.label}
+          customNote={block.value?.note}
+        />
       );
 
     case 'table':
@@ -288,7 +319,14 @@ export default function PujaDetail() {
               <Reveal>
                 <div className="prose-puja mt-8">
                   {puja.blocks.map((block, i) => (
-                    <BlockRenderer key={i} block={block} />
+                    <BlockRenderer
+                      key={i}
+                      block={block}
+                      cityName={puja.city}
+                      countryName={puja.country}
+                      latitude={puja.latitude}
+                      longitude={puja.longitude}
+                    />
                   ))}
                 </div>
               </Reveal>

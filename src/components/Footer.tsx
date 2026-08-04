@@ -41,12 +41,18 @@ const Footer = () => {
     { name: "Terms & Conditions", href: "#" },
     { name: "Disclaimer", href: "#" },
   ];
+  const ContactUs = [
+  { name: "Call Sales", href: "tel:+919876543210" },
+  { name: "Email Sales", href: "mailto:sales@namanpuja.com" },
+  { name: "Call Support", href: "tel:+919876543210" },
+  { name: "Email Support", href: "mailto:support@namanpuja.com" },
+];
 
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer */}
       <div className="container mx-auto px-4 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
           {/* Brand Column */}
           <div className="space-y-6 ml-8">
             <a href="/" className="flex flex-col items-start leading-none">
@@ -107,6 +113,7 @@ const Footer = () => {
               ))}
             </ul>
           </div>
+       
 
           {/* Services */}
           <div className="lg:pl-12">
@@ -143,6 +150,42 @@ const Footer = () => {
               ))}
             </ul>
           </div>
+          {/* Sales and Support */}
+<div className="lg:pl-12">
+  <h4 className="font-display text-xl font-semibold mb-6">Sales and Support</h4>
+
+  <div className="mb-5">
+    <p className="text-white/50 text-xs uppercase tracking-wide mb-2">Sales Team</p>
+    <ul className="space-y-3">
+      {ContactUs.slice(0, 2).map((link) => (
+        <li key={link.name}>
+          <a
+            href={link.href}
+            className="text-white/70 hover:text-primary transition-colors"
+          >
+            {link.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div>
+    <p className="text-white/50 text-xs uppercase tracking-wide mb-2">Customer Service</p>
+    <ul className="space-y-3">
+      {ContactUs.slice(2, 4).map((link) => (
+        <li key={link.name}>
+          <a
+            href={link.href}
+            className="text-white/70 hover:text-primary transition-colors"
+          >
+            {link.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
 
 
         </div>
