@@ -102,6 +102,7 @@ export interface PujaLocation {
   breadcrumb?: string[];
   internalLinks?: { label: string; href: string }[];
   imageAlt?: string;
+  basePrice?: string | number;
   puja?: Puja;
   city?: City;
   cityName?: string;

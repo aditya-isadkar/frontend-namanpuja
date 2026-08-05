@@ -172,6 +172,12 @@ function BookingRail({ puja }: { puja: PujaWithContent }) {
           <p className="text-sm font-semibold text-ink/60">Ready to begin?</p>
           <h3 className="mt-1 font-display text-lg font-bold text-ink">{puja.name}</h3>
 
+          {puja.basePrice !== undefined && puja.basePrice !== null && Number(puja.basePrice) > 0 && (
+            <div className="mt-3 text-2xl font-bold text-saffron-700">
+              ₹{puja.basePrice} <span className="text-xs font-normal text-ink/60">onwards</span>
+            </div>
+          )}
+
           <Link
             to={bookHref}
             className="btn-primary mt-4 flex w-full items-center justify-center gap-2"

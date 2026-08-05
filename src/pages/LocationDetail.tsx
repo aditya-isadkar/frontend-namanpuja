@@ -87,6 +87,9 @@ function BlockRenderer({
           src={block.value}
           alt=""
           className="mt-6 w-full rounded-2xl border border-saffron-100 object-cover shadow-sm"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = 'none';
+          }}
         />
       ) : null;
 
@@ -216,8 +219,9 @@ export default function LocationDetail() {
 
   const bookHref = `/book?puja=${loc.puja?.id ?? ''}&city=${loc.city?.id ?? ''}`;
 
-  // Hero image: prefer featuredImage / heroImage / ogImage, fall back to puja heroImage
-  const heroImage = loc.featuredImage || loc.heroImage || loc.ogImage || loc.puja?.heroImage;
+  // Hero image: only show if explicitly added (featuredImage, heroImage, or puja.heroImage).
+  // Do NOT use loc.ogImage as that is auto-generated for SEO social meta tags on fallback pages.
+  const heroImage = loc.featuredImage || loc.heroImage || loc.puja?.heroImage;
 
   // Normalise sections into blocks so BlockRenderer handles them
   const sectionBlocks: ContentBlockType[] = (loc.sections ?? []).flatMap(sectionToBlocks);
@@ -293,12 +297,16 @@ export default function LocationDetail() {
 
       {/* Featured / Hero image */}
       {heroImage && (
-        <div className="container-page -mt-4 mb-4">
+        <div className="container-page -mt-4 mb-4" id="hero-img-container">
           <Reveal>
             <img
               src={heroImage}
               alt={loc.imageAlt ?? loc.h1}
               className="aspect-[16/7] w-full rounded-3xl border border-saffron-100 object-cover shadow-sm"
+              onError={(e) => {
+                const parent = document.getElementById('hero-img-container');
+                if (parent) parent.style.display = 'none';
+              }}
             />
           </Reveal>
         </div>
@@ -317,7 +325,10 @@ export default function LocationDetail() {
             />
           </Reveal>
 
-          {/* ── Content Builder blocks (image, table, heading, etc.) ── */}
+          {/* ── Content Builder blocks OR legacy sections — never both at once ──
+              loc.blocks is the source of truth when present (it is always overwritten
+              on save). sectionBlocks is a fallback for old records that only have
+              loc.sections and have not yet been re-saved through the admin. */}
           {loc.blocks?.length ? (
             <Reveal>
               <div className="mt-4">
@@ -333,10 +344,7 @@ export default function LocationDetail() {
                 ))}
               </div>
             </Reveal>
-          ) : null}
-
-          {/* ── Sections (supports both legacy {heading,body} and block format) ── */}
-          {sectionBlocks.length ? (
+          ) : sectionBlocks.length ? (
             <Reveal>
               <div className="mt-4">
                 {sectionBlocks.map((block, i) => (
@@ -452,6 +460,13 @@ export default function LocationDetail() {
           <div className="rounded-3xl border border-saffron-100 bg-white p-6 shadow-glow">
             <h3 className="font-display text-xl font-bold">Book {loc.puja?.name}</h3>
             <p className="mt-1 text-sm text-ink/60">in {loc.city?.name}, {loc.city?.state}</p>
+
+            {loc.basePrice !== undefined && loc.basePrice !== null && Number(loc.basePrice) > 0 && (
+              <div className="mt-3 text-2xl font-bold text-saffron-700">
+                ₹{loc.basePrice} <span className="text-xs font-normal text-ink/60">onwards</span>
+              </div>
+            )}
+
             <Link to={bookHref} className="btn-primary mt-5 w-full">
               {loc.cta?.buttonLabel ?? 'Book Now'}
             </Link>
