@@ -14,6 +14,7 @@ import { getPuja } from '@/lib/api';
 import type { Puja } from '@/lib/types';
 import { Reveal } from '@/components/motion';
 import { RahuKaalCard } from '@/components/RahuKaalCard';
+import { SEOMetadata } from '@/components/SEOMetadata';
 
 // ─────────────────────────────────────────────────────────────
 // Content block types — mirrors the Bhakti Page Content Builder
@@ -31,7 +32,11 @@ type RahuKalBlock = {
   type: 'rahu_kal';
   value?: { label?: string; note?: string };
 };
-type ContentBlock = HeadingBlock | ParagraphBlock | ImageBlock | TimingBlock | TableBlock | RahuKalBlock;
+type CtaBlock = {
+  type: 'cta';
+  value: { label: string; url: string };
+};
+type ContentBlock = HeadingBlock | ParagraphBlock | ImageBlock | TimingBlock | TableBlock | RahuKalBlock | CtaBlock;
 
 type Faq = { question: string; answer: string };
 
@@ -147,6 +152,20 @@ function BlockRenderer({
         </div>
       );
 
+    case 'cta':
+      return block.value?.url ? (
+        <div className="mt-8">
+          <a
+            href={block.value.url}
+            className="btn-primary flex w-full items-center justify-center gap-2 py-4 text-center font-bold shadow-md"
+            target={block.value.url.startsWith('http') ? '_blank' : '_self'}
+            rel="noopener noreferrer"
+          >
+            {block.value.label || 'Click Here'} <Flame className="h-5 w-5" />
+          </a>
+        </div>
+      ) : null;
+
     default:
       return null;
   }
@@ -184,6 +203,20 @@ function BookingRail({ puja }: { puja: PujaWithContent }) {
           >
             Book Now <Flame className="h-4 w-4" />
           </Link>
+
+          {puja.blocks?.filter((b: any) => b.type === 'cta').map((block: any, i: number) => (
+            block.value?.url ? (
+              <a
+                key={i}
+                href={block.value.url}
+                className="btn-primary mt-3 flex w-full items-center justify-center gap-2"
+                target={block.value.url.startsWith('http') ? '_blank' : '_self'}
+                rel="noopener noreferrer"
+              >
+                {block.value.label || 'Book Now'} <Flame className="h-4 w-4" />
+              </a>
+            ) : null
+          ))}
 
           <ul className="mt-5 space-y-3">
             {perks.map((perk) => (
@@ -246,7 +279,15 @@ export default function PujaDetail() {
   if (!puja) return null;
 
   return (
-    <>{puja.structuredData && (
+    <>
+      <SEOMetadata
+        title={puja.name}
+        description={puja.excerpt || puja.shortDesc || puja.shortDescription || puja.subtitle || puja.description}
+        keywords={puja.tags}
+        ogImage={puja.featuredImage || puja.heroImage}
+        jsonLd={puja.structuredData as any}
+      />
+      {puja.structuredData && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(puja.structuredData) }}

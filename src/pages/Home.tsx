@@ -9,6 +9,7 @@ import { HowItWorks } from '@/components/HowItWorks';
 import { PujaCard } from '@/components/PujaCard';
 import { StaggerGroup, StaggerItem } from '@/components/motion';
 import { PujaSection } from '@/components/PujaSection';
+import { SEOMetadata } from '@/components/SEOMetadata';
 
 const FEATURED_LIMIT = 6;
 
@@ -48,6 +49,10 @@ export default function Home() {
 
   return (
     <>
+      <SEOMetadata
+        title="Naman Puja — Book Authentic Vedic Pujas at Home & Online"
+        description="Book authentic Hindu pujas with experienced Vedic priests — at home or online. Choose your country, your city, and the puja you need."
+      />
       <Hero />
       <FlowSelector countries={countries} />
       <PujaSection />

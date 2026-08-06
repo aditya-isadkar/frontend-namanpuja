@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getCountries, getCountryCities } from '@/lib/api';
 import { Reveal } from '@/components/motion';
 import { LocationsClient } from '@/components/LocationClient';
+import { SEOMetadata } from '@/components/SEOMetadata';
 import type { Country } from '@/lib/types';
 
 // Tangerine font is loaded via a <link> tag (see index.html) instead of
@@ -45,6 +46,10 @@ export default function LocationsPage() {
 
   return (
     <section id="locations">
+      <SEOMetadata
+        title="Global Puja Locations — Naman Puja"
+        description="Connecting devotees across the globe through sacred Vedic rituals. Find experienced priests and authentic puja services in your country and city."
+      />
       <div className="container-page py-16">
         <div className="text-center mb-12 mt-20">
           <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4 italic">

@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
 import { Reveal } from '@/components/motion';
 import { LoginForm } from '@/components/LoginForm';
+import { SEOMetadata } from '@/components/SEOMetadata';
 
 export default function Login() {
-  useEffect(() => {
-    document.title = 'Login | Naman Puja';
-  }, []);
-
   return (
     <section className="bg-saffron-radial min-h-screen mt-12">
+      <SEOMetadata
+        title="Login"
+        description="Sign in to your Naman Puja account to access your bookings and profile."
+      />
       <div className="container-page py-16">
         <div className="mx-auto max-w-md">
           <Reveal>

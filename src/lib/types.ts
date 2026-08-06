@@ -74,7 +74,8 @@ export type ContentBlockType =
   | { type: 'image'; value: string }
   | { type: 'timing'; value: { label: string; time: string } }
   | { type: 'table'; value: { columns: string[]; rows: { cells: string[] }[] } }
-  | { type: 'rahu_kal'; value?: { label?: string; note?: string } };
+  | { type: 'rahu_kal'; value?: { label?: string; note?: string } }
+  | { type: 'cta'; value: { label: string; url: string } };
 
 export interface PujaLocation {
   id: string;

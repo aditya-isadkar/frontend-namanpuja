@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
 import { Reveal } from '@/components/motion';
 import { RegistrationForm } from '@/components/RegistrationForm';
+import { SEOMetadata } from '@/components/SEOMetadata';
 
 export default function Register() {
-  useEffect(() => {
-    document.title = 'Register | Naman Puja';
-  }, []);
-
   return (
     <section className="bg-saffron-radial min-h-screen">
+      <SEOMetadata
+        title="Register / Create Account"
+        description="Register an account on Naman Puja to easily book pujas, track your requests, and manage your account."
+      />
       <div className="container-page py-16">
         <div className="mx-auto max-w-md">
           <Reveal>

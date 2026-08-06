@@ -9,6 +9,7 @@ import type { PujaLocation, ContentBlockType } from '@/lib/types';
 import { Reveal, StaggerGroup, StaggerItem } from '@/components/motion';
 import { FaqList } from '@/components/FaqList';
 import { RahuKaalCard } from '@/components/RahuKaalCard';
+import { SEOMetadata } from '@/components/SEOMetadata';
 
 // ─────────────────────────────────────────────────────────────
 // <head> helpers — upsert instead of duplicate on every mount
@@ -142,6 +143,20 @@ function BlockRenderer({
         </div>
       );
 
+    case 'cta':
+      return (block.value as any)?.url ? (
+        <div className="mt-8">
+          <a
+            href={(block.value as any).url}
+            className="btn-primary flex w-full items-center justify-center gap-2 py-4 text-center font-bold shadow-md"
+            target={(block.value as any).url.startsWith('http') ? '_blank' : '_self'}
+            rel="noopener noreferrer"
+          >
+            {(block.value as any).label || 'Click Here'} <Flame className="h-5 w-5" />
+          </a>
+        </div>
+      ) : null;
+
     default:
       return null;
   }
@@ -262,6 +277,14 @@ export default function LocationDetail() {
 
   return (
     <>
+      <SEOMetadata
+        title={loc.metaTitle ?? loc.h1 ?? 'Puja Location'}
+        description={loc.metaDescription}
+        keywords={loc.keywords as unknown as string}
+        canonicalUrl={loc.canonicalUrl}
+        ogImage={loc.ogImage || loc.featuredImage}
+        jsonLd={jsonLd as any}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -470,6 +493,20 @@ export default function LocationDetail() {
             <Link to={bookHref} className="btn-primary mt-5 w-full">
               {loc.cta?.buttonLabel ?? 'Book Now'}
             </Link>
+
+            {loc.blocks?.filter((b: any) => b.type === 'cta').map((block: any, i: number) => (
+              block.value?.url ? (
+                <a
+                  key={i}
+                  href={block.value.url}
+                  className="btn-primary mt-3 flex w-full items-center justify-center gap-2"
+                  target={block.value.url.startsWith('http') ? '_blank' : '_self'}
+                  rel="noopener noreferrer"
+                >
+                  {block.value.label || 'Book Now'} <Flame className="h-4 w-4" />
+                </a>
+              ) : null
+            ))}
             <ul className="mt-5 space-y-2 text-sm text-ink/70">
               {(loc.cta?.bullets ?? ['Experienced Vedic Priests', 'Authentic rituals at home', 'Complete samagri guidance']).map((b) => (
                 <li key={b} className="flex items-start gap-2">

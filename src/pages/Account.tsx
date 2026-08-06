@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { SEOMetadata } from '@/components/SEOMetadata';
 
 interface User {
   id: string;
@@ -20,25 +21,16 @@ export default function Account() {
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
 
   useEffect(() => {
-    document.title = 'My Account | Naman Puja';
     const stored = localStorage.getItem('np_user');
     if (stored) {
       try {
-        const parsed = JSON.parse(stored);
-        setUser(parsed);
-        setForm({ name: parsed.name || '', email: parsed.email || '', phone: parsed.phone || '' });
-      } catch {
-        setUser(null);
-      }
+        const u = JSON.parse(stored);
+        setUser(u);
+        setForm({ name: u.name ?? '', email: u.email ?? '', phone: u.phone ?? '' });
+      } catch {}
     }
     setLoading(false);
   }, []);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate('/login');
-    }
-  }, [loading, user, navigate]);
 
   function handleLogout() {
     localStorage.removeItem('np_user_token');
@@ -103,6 +95,7 @@ export default function Account() {
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+      <SEOMetadata title="My Account" description="User account management on Naman Puja." />
       <div className="container mx-auto max-w-3xl px-4">
         {/* Header */}
         <div className="flex items-center gap-4 rounded-2xl bg-white p-6 shadow-sm">

@@ -3,6 +3,7 @@ import { getPujas } from '@/lib/api';
 import type { Puja } from '@/lib/types';
 import { BookingForm } from '@/components/BookingForm';
 import { Reveal } from '@/components/motion';
+import { SEOMetadata } from '@/components/SEOMetadata';
 import { useSearchParams } from 'react-router-dom';
 
 export default function Book() {
@@ -10,12 +11,15 @@ export default function Book() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    document.title = 'Book a Puja | Naman Puja';
     getPujas().then(setPujas);
   }, []);
 
   return (
     <section className="bg-saffron-radial mt-12">
+      <SEOMetadata
+        title="Book a Puja — Authentic Vedic Ceremonies"
+        description="Book your puja with certified Vedic priests. Select your ceremony, date, location, and preferred service (Home Visit or Online e-Puja)."
+      />
       <div className="container-page grid gap-12 py-16 lg:grid-cols-[1fr_1.1fr]">
         <Reveal className="lg:sticky lg:top-24 lg:h-fit">
           <span className="badge">Book in minutes</span>

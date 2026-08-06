@@ -4,6 +4,7 @@ import { Search, Flame, Clock } from 'lucide-react';
 import { getPujas } from '@/lib/api';
 import { Reveal } from '@/components/motion';
 import { PujaSearch } from '@/components/PujaSearch';
+import { SEOMetadata } from '@/components/SEOMetadata';
 import type { Puja } from '@/lib/types';
 
 export default function MainPuja() {
@@ -74,6 +75,10 @@ export default function MainPuja() {
 
   return (
     <div className="container-page py-28">
+      <SEOMetadata
+        title="All Pujas — Authentic Vedic Ceremonies"
+        description="Browse and book authentic Hindu pujas performed by certified Vedic priests. Explore rituals by category, deity, or occasion."
+      />
       {/* Search bar */}
 
       <Reveal>

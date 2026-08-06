@@ -5,6 +5,7 @@ import { getCity, getPujas } from '@/lib/api';
 import type { City, PujaLocation } from '@/lib/types';
 import { pujaLocationSlug } from '@/lib/slug';
 import { Reveal, StaggerGroup, StaggerItem } from '@/components/motion';
+import { SEOMetadata } from '@/components/SEOMetadata';
 
 export default function CityDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -67,6 +68,10 @@ export default function CityDetail() {
 
   return (
     <>
+      <SEOMetadata
+        title={`Book Pujas in ${city.name}`}
+        description={`Book authentic Vedic pujas with experienced priests in ${city.name}${city.state ? `, ${city.state}` : ''}. Custom samagri, flexible timings, and home or online pujas available.`}
+      />
       <section className="bg-saffron-radial">
         <div className="container-page py-16">
           <Reveal>
