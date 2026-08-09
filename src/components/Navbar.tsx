@@ -37,19 +37,32 @@ function NavDropdown({ label, options }: {
 
       {open && (
         <div className="absolute top-8 left-0 z-50 min-w-[220px] rounded-2xl bg-gray-900 py-2 shadow-xl">
-          {options.map((opt) => (
-            <a
-              key={opt.label}
-              href={opt.value}
-              target={opt.value.startsWith('http') ? '_blank' : undefined}
-              rel={opt.value.startsWith('http') ? 'noopener noreferrer' : undefined}
-              onClick={() => setOpen(false)}
-              className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3"
-            >
-              {opt.icon && <span className="text-base">{opt.icon}</span>}
-              {opt.label}
-            </a>
-          ))}
+          {options.map((opt) => {
+            const isInternal = opt.value.startsWith('/');
+            return isInternal ? (
+              <Link
+                key={opt.label}
+                to={opt.value}
+                onClick={() => setOpen(false)}
+                className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3"
+              >
+                {opt.icon && <span className="text-base">{opt.icon}</span>}
+                {opt.label}
+              </Link>
+            ) : (
+              <a
+                key={opt.label}
+                href={opt.value}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="w-full px-5 py-3 text-left text-sm font-semibold text-white hover:text-saffron-400 transition-colors flex items-center gap-3"
+              >
+                {opt.icon && <span className="text-base">{opt.icon}</span>}
+                {opt.label}
+              </a>
+            );
+          })}
         </div>
       )}
     </div>
@@ -75,19 +88,32 @@ function MobileAccordion({ label, options, onNavigate }: {
 
       {open && (
         <div className="pb-3 pl-2 flex flex-col">
-          {options.map((opt) => (
-            <a
-              key={opt.label}
-              href={opt.value}
-              target={opt.value.startsWith('http') ? '_blank' : undefined}
-              rel={opt.value.startsWith('http') ? 'noopener noreferrer' : undefined}
-              onClick={onNavigate}
-              className="py-2.5 text-sm font-semibold text-gray-700 flex items-center gap-3"
-            >
-              {opt.icon && <span className="text-base">{opt.icon}</span>}
-              {opt.label}
-            </a>
-          ))}
+          {options.map((opt) => {
+            const isInternal = opt.value.startsWith('/');
+            return isInternal ? (
+              <Link
+                key={opt.label}
+                to={opt.value}
+                onClick={onNavigate}
+                className="py-2.5 text-sm font-semibold text-gray-700 flex items-center gap-3"
+              >
+                {opt.icon && <span className="text-base">{opt.icon}</span>}
+                {opt.label}
+              </Link>
+            ) : (
+              <a
+                key={opt.label}
+                href={opt.value}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onNavigate}
+                className="py-2.5 text-sm font-semibold text-gray-700 flex items-center gap-3"
+              >
+                {opt.icon && <span className="text-base">{opt.icon}</span>}
+                {opt.label}
+              </a>
+            );
+          })}
         </div>
       )}
     </div>

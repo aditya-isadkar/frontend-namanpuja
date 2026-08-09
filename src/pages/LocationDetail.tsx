@@ -143,20 +143,6 @@ function BlockRenderer({
         </div>
       );
 
-    case 'cta':
-      return (block.value as any)?.url ? (
-        <div className="mt-8">
-          <a
-            href={(block.value as any).url}
-            className="btn-primary flex w-full items-center justify-center gap-2 py-4 text-center font-bold shadow-md"
-            target={(block.value as any).url.startsWith('http') ? '_blank' : '_self'}
-            rel="noopener noreferrer"
-          >
-            {(block.value as any).label || 'Click Here'} <Flame className="h-5 w-5" />
-          </a>
-        </div>
-      ) : null;
-
     default:
       return null;
   }
@@ -232,7 +218,7 @@ export default function LocationDetail() {
 
   if (!loc) return null;
 
-  const bookHref = `/book?puja=${loc.puja?.id ?? ''}&city=${loc.city?.id ?? ''}`;
+  const bookHref = `/payment?puja=${loc.puja?.id ?? ''}&country=${encodeURIComponent(loc.countryName || loc.city?.country?.name || 'India')}&city=${encodeURIComponent(loc.city?.name || loc.cityName || '')}`;
 
   // Hero image: only show if explicitly added (featuredImage, heroImage, or puja.heroImage).
   // Do NOT use loc.ogImage as that is auto-generated for SEO social meta tags on fallback pages.
@@ -308,7 +294,11 @@ export default function LocationDetail() {
             <h1 className="mt-4 max-w-4xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
               {loc.h1}
             </h1>
-            {loc.heroTagline && <p className="mt-4 max-w-3xl text-lg text-ink/70">{loc.heroTagline}</p>}
+            {(loc.puja?.shortDesc || loc.puja?.shortDescription || loc.puja?.subtitle || loc.heroTagline) && (
+              <p className="mt-4 max-w-3xl text-lg text-ink/70">
+                {loc.puja?.shortDesc || loc.puja?.shortDescription || loc.puja?.subtitle || loc.heroTagline}
+              </p>
+            )}
             <div className="mt-8 flex flex-wrap gap-4">
               <Link to={bookHref} className="btn-primary">
                 {loc.cta?.buttonLabel ?? 'Book this Puja'} <Flame className="h-4 w-4" />
@@ -332,6 +322,13 @@ export default function LocationDetail() {
               }}
             />
           </Reveal>
+          {loc.puja?.excerpt && (
+            <Reveal>
+              <p className="mt-6 text-xl font-medium leading-relaxed text-ink/80">
+                {loc.puja?.excerpt}
+              </p>
+            </Reveal>
+          )}
         </div>
       )}
 
@@ -479,7 +476,7 @@ export default function LocationDetail() {
           ) : null}
         </article>
 
-        <aside className="lg:sticky lg:top-24 lg:h-fit">
+        <aside className="lg:sticky lg:top-24 lg:h-fit space-y-6">
           <div className="rounded-3xl border border-saffron-100 bg-white p-6 shadow-glow">
             <h3 className="font-display text-xl font-bold">Book {loc.puja?.name}</h3>
             <p className="mt-1 text-sm text-ink/60">in {loc.city?.name}, {loc.city?.state}</p>
@@ -490,23 +487,10 @@ export default function LocationDetail() {
               </div>
             )}
 
-            <Link to={bookHref} className="btn-primary mt-5 w-full">
-              {loc.cta?.buttonLabel ?? 'Book Now'}
+            <Link to={bookHref} className="btn-primary mt-5 flex w-full items-center justify-center gap-2">
+              {loc.cta?.buttonLabel ?? 'Book Now'} <Flame className="h-4 w-4" />
             </Link>
 
-            {loc.blocks?.filter((b: any) => b.type === 'cta').map((block: any, i: number) => (
-              block.value?.url ? (
-                <a
-                  key={i}
-                  href={block.value.url}
-                  className="btn-primary mt-3 flex w-full items-center justify-center gap-2"
-                  target={block.value.url.startsWith('http') ? '_blank' : '_self'}
-                  rel="noopener noreferrer"
-                >
-                  {block.value.label || 'Book Now'} <Flame className="h-4 w-4" />
-                </a>
-              ) : null
-            ))}
             <ul className="mt-5 space-y-2 text-sm text-ink/70">
               {(loc.cta?.bullets ?? ['Experienced Vedic Priests', 'Authentic rituals at home', 'Complete samagri guidance']).map((b) => (
                 <li key={b} className="flex items-start gap-2">
@@ -516,8 +500,36 @@ export default function LocationDetail() {
             </ul>
           </div>
 
+          {loc.blocks?.filter((b: any) => b.type === 'cta').map((block: any, i: number) => {
+            const url = block.value?.url;
+            const label = block.value?.label || 'Book Now';
+            if (!url) return null;
+            if (url.startsWith('/')) {
+              return (
+                <Link
+                  key={i}
+                  to={url}
+                  className="btn-primary flex w-full items-center justify-center gap-2 shadow-md"
+                >
+                  {label} <Flame className="h-4 w-4" />
+                </Link>
+              );
+            }
+            return (
+              <a
+                key={i}
+                href={url}
+                className="btn-primary flex w-full items-center justify-center gap-2 shadow-md"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {label} <Flame className="h-4 w-4" />
+              </a>
+            );
+          })}
+
           {loc.internalLinks?.length ? (
-            <div className="mt-6 rounded-3xl border border-saffron-100 bg-cream p-6">
+            <div className="rounded-3xl border border-saffron-100 bg-cream p-6">
               <h4 className="font-display font-semibold">Other pujas in {loc.city?.name}</h4>
               <ul className="mt-3 space-y-2">
                 {loc.internalLinks.map((l) => (

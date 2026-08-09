@@ -105,9 +105,6 @@ export function SEOMetadata({
 
     // 3. Security Meta Directives
     upsertMetaByName('referrer', referrerPolicy);
-    upsertMetaByHttpEquiv('Strict-Transport-Security', hsts);
-    upsertMetaByHttpEquiv('X-Frame-Options', xFrameOptions);
-    upsertMetaByHttpEquiv('Content-Security-Policy', "frame-ancestors 'self';");
 
     // 4. Description & Keywords
     const finalDesc = description || DEFAULT_DESCRIPTION;

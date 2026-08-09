@@ -34,6 +34,8 @@ export interface Puja {
   slug: string;
   subtitle?: string;
   shortDesc?: string;
+  shortDescription?: string;
+  excerpt?: string;
   description?: string;
   serviceType: ServiceType;
   durationMin?: number;

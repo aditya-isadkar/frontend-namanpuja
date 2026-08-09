@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate, Link  } from 'react-router-dom';
 import { Loader2, LogIn } from 'lucide-react';
 import { login } from '@/lib/api';
 
@@ -88,12 +88,12 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-ink/60">
         Don't have an account?{' '}
-        <a
-          href="/register"
+        <Link
+          to="/register"
           className="font-medium text-saffron-700 hover:text-saffron-800"
         >
           Register
-        </a>
+        </Link>
       </p>
     </form>
   );

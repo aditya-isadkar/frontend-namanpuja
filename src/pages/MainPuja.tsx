@@ -164,18 +164,18 @@ export default function MainPuja() {
           {/* Flat puja card grid */}
 {!loading && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {pujas.map((p) => (
+               {pujas.map((p) => (
                <Reveal key={p.id} className="h-full">
-                     <Link
-                        to={`/pujas/${p.slug}`}
-                        className="group flex h-full flex-col rounded-2xl border border-saffron-100 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+                      <div
+                        onClick={() => navigate(`/pujas/${p.slug ?? p.id}`)}
+                        className="group flex h-full flex-col rounded-2xl border border-saffron-100 bg-white p-5 shadow-sm transition-shadow hover:shadow-md cursor-pointer"
                           >
                          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-saffron-100">
       <Flame className="h-5 w-5 text-saffron-600" />
     </div>
     <h3 className="font-display text-base font-bold text-ink">{p.name}</h3>
-    {p.subtitle && (
-      <p className="mt-1 line-clamp-2 text-sm text-ink/60">{p.subtitle}</p>
+    {(p.shortDesc ?? p.shortDescription ?? p.subtitle) && (
+      <p className="mt-1 line-clamp-2 text-sm text-ink/60">{p.shortDesc ?? p.shortDescription ?? p.subtitle}</p>
     )}
     {p.durationMin && (
       <span className="mt-2 flex items-center gap-1 text-xs text-ink/50">
@@ -184,14 +184,22 @@ export default function MainPuja() {
     )}
 
     <div className="mt-4 flex gap-2">
-      <Link to={`/book?puja=${p.id}`} className="flex-1 truncate rounded-full bg-[#5c1a2b] px-4 py-2 text-center text-[10px] font-bold text-white transition-colors group-hover:bg-[#4a1522]">
+      <Link
+        to={`/payment?puja=${p.slug ?? p.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="flex-1 truncate rounded-full bg-[#5c1a2b] px-4 py-2 text-center text-[10px] font-bold text-white transition-colors hover:bg-[#4a1522]"
+      >
         Book {p.name}
       </Link>
-      <span className="flex-1 truncate rounded-full bg-[#5c1a2b] px-4 py-2 text-center text-[10px] font-bold text-white transition-colors group-hover:bg-[#4a1522]">
+      <Link
+        to={`/pujas/${p.slug ?? p.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="flex-1 truncate rounded-full bg-[#5c1a2b] px-4 py-2 text-center text-[10px] font-bold text-white transition-colors hover:bg-[#4a1522]"
+      >
         View Details
-      </span>
+      </Link>
     </div>
-  </Link>
+  </div>
 </Reveal>
               ))}
             </div>

@@ -1,7 +1,8 @@
 import type { City, Country, Puja, PujaLocation, Temple } from './types';
 
 // In a Vite SPA all code runs in the browser — use VITE_API_URL from .env
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
+const rawApiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
+const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl.replace(/\/+$/, '')}/api`;
 
 async function api<T>(path: string): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
@@ -62,6 +63,7 @@ export interface BookingPayload {
   pujaId?: string;
   cityId?: string;
   userId?: string;
+  paymentId?: string;
 }
 
 export interface RegisterPayload {

@@ -152,20 +152,6 @@ function BlockRenderer({
         </div>
       );
 
-    case 'cta':
-      return block.value?.url ? (
-        <div className="mt-8">
-          <a
-            href={block.value.url}
-            className="btn-primary flex w-full items-center justify-center gap-2 py-4 text-center font-bold shadow-md"
-            target={block.value.url.startsWith('http') ? '_blank' : '_self'}
-            rel="noopener noreferrer"
-          >
-            {block.value.label || 'Click Here'} <Flame className="h-5 w-5" />
-          </a>
-        </div>
-      ) : null;
-
     default:
       return null;
   }
@@ -175,7 +161,7 @@ function BlockRenderer({
 // Sticky booking rail — right ~20% of the screen on large viewports
 // ─────────────────────────────────────────────────────────────
 function BookingRail({ puja }: { puja: PujaWithContent }) {
-  const bookHref = `/book?puja=${puja.id ?? ''}${puja.city ? `&city=${encodeURIComponent(puja.city)}` : ''}`;
+  const bookHref = `/payment?puja=${puja.id ?? ''}${puja.country ? `&country=${encodeURIComponent(puja.country)}` : ''}${puja.city ? `&city=${encodeURIComponent(puja.city)}` : ''}`;
 
   const perks = [
     'Experienced Vedic Priests',
@@ -186,7 +172,7 @@ function BookingRail({ puja }: { puja: PujaWithContent }) {
 
   return (
     <aside className="lg:col-span-1">
-      <div className="lg:sticky lg:top-24">
+      <div className="lg:sticky lg:top-24 space-y-6">
         <div className="rounded-2xl border border-saffron-100 bg-white p-5 shadow-sm">
           <p className="text-sm font-semibold text-ink/60">Ready to begin?</p>
           <h3 className="mt-1 font-display text-lg font-bold text-ink">{puja.name}</h3>
@@ -203,20 +189,6 @@ function BookingRail({ puja }: { puja: PujaWithContent }) {
           >
             Book Now <Flame className="h-4 w-4" />
           </Link>
-
-          {puja.blocks?.filter((b: any) => b.type === 'cta').map((block: any, i: number) => (
-            block.value?.url ? (
-              <a
-                key={i}
-                href={block.value.url}
-                className="btn-primary mt-3 flex w-full items-center justify-center gap-2"
-                target={block.value.url.startsWith('http') ? '_blank' : '_self'}
-                rel="noopener noreferrer"
-              >
-                {block.value.label || 'Book Now'} <Flame className="h-4 w-4" />
-              </a>
-            ) : null
-          ))}
 
           <ul className="mt-5 space-y-3">
             {perks.map((perk) => (
@@ -242,6 +214,34 @@ function BookingRail({ puja }: { puja: PujaWithContent }) {
             </div>
           )}
         </div>
+
+        {puja.blocks?.filter((b: any) => b.type === 'cta').map((block: any, i: number) => {
+          const url = block.value?.url;
+          const label = block.value?.label || 'Book Now';
+          if (!url) return null;
+          if (url.startsWith('/')) {
+            return (
+              <Link
+                key={i}
+                to={url}
+                className="btn-primary flex w-full items-center justify-center gap-2 shadow-md"
+              >
+                {label} <Flame className="h-4 w-4" />
+              </Link>
+            );
+          }
+          return (
+            <a
+              key={i}
+              href={url}
+              className="btn-primary flex w-full items-center justify-center gap-2 shadow-md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {label} <Flame className="h-4 w-4" />
+            </a>
+          );
+        })}
       </div>
     </aside>
   );
@@ -302,7 +302,11 @@ export default function PujaDetail() {
             <h1 className="mt-4 max-w-3xl font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
               {puja.name}
             </h1>
-            {puja.subtitle && <p className="mt-4 max-w-2xl text-lg text-ink/70">{puja.subtitle}</p>}
+            {(puja.shortDesc || puja.shortDescription || puja.subtitle) && (
+              <p className="mt-4 max-w-2xl text-lg text-ink/70">
+                {puja.shortDesc || puja.shortDescription || puja.subtitle}
+              </p>
+            )}
 
             <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-ink/60">
               {puja.author && (
@@ -342,6 +346,13 @@ export default function PujaDetail() {
               className="aspect-[16/7] w-full rounded-3xl border border-saffron-100 object-cover shadow-sm"
             />
           </Reveal>
+          {puja.excerpt && (
+            <Reveal>
+              <p className="mt-6 text-xl font-medium leading-relaxed text-ink/80">
+                {puja.excerpt}
+              </p>
+            </Reveal>
+          )}
         </div>
       )}
 
@@ -350,15 +361,9 @@ export default function PujaDetail() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-5">
           {/* Main content — ~80% */}
           <div className="lg:col-span-4">
-            {puja.excerpt && (
-              <Reveal>
-                <p className="text-lg leading-relaxed text-ink/80">{puja.excerpt}</p>
-              </Reveal>
-            )}
-
             {puja.description && (
               <Reveal>
-                <p className="mt-4 text-lg leading-relaxed text-ink/80">{puja.description}</p>
+                <p className="text-lg leading-relaxed text-ink/80">{puja.description}</p>
               </Reveal>
             )}
 

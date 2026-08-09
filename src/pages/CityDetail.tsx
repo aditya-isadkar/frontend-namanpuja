@@ -113,7 +113,7 @@ export default function CityDetail() {
                   <p className="mt-1 text-sm text-saffron-700">{loc.puja.deity}</p>
                 )}
                 <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-ink/60">
-                  {loc.puja?.shortDesc}
+                  {loc.puja?.shortDesc ?? loc.puja?.shortDescription ?? loc.puja?.subtitle ?? loc.heroTagline ?? loc.intro}
                 </p>
                 <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-saffron-600">
                   View details &amp; book{' '}

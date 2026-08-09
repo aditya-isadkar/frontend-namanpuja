@@ -28,7 +28,7 @@ export function PujaCard({ puja, href }: { puja: Puja; href?: string }) {
         <p className="mt-1 text-sm text-saffron-700">{puja.deity}</p>
       )}
       <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-ink/60">
-        {puja.shortDesc ?? puja.subtitle}
+        {puja.shortDesc ?? puja.shortDescription ?? puja.subtitle}
       </p>
       <div className="mt-5 flex items-center justify-between border-t border-saffron-100 pt-4">
         <div className="flex items-center gap-3 text-sm text-ink/60">

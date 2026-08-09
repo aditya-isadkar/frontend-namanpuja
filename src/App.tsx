@@ -11,6 +11,7 @@ import LocationDetail from '@/pages/LocationDetail';
 import PujaDetail from '@/pages/PujaDetail';
 import MainPuja from '@/pages/MainPuja';
 import MainLocation from '@/pages/MainLocation';
+import  PaymentPagesRazourPay  from '@/pages/PaymentPagesRazourPay';
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="/pujas/mainpuja" element={<MainPuja />} />
             <Route path="/pujas/:slug" element={<PujaDetail />} />
             <Route path="/mainlocation" element={<MainLocation />} />
+            <Route path="/payment" element={<PaymentPagesRazourPay />} />
           </Routes>
         </main>
         <Footer />
